@@ -5,19 +5,25 @@ let pool: Pool | null = null;
 
 export async function initializeDatabase() {
   try {
-    // Create connection pool
-    pool = mysql.createPool({
-      host: process.env.MYSQL_HOST || 'localhost',
-      user: process.env.MYSQL_USER || 'root',
-      password: process.env.MYSQL_PASSWORD || '',
-      database: process.env.MYSQL_DATABASE || 'blog_db',
-      port: parseInt(process.env.MYSQL_PORT || '3306'),
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
-      timezone: '+00:00',
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
-    });
+    const mysqlUrl = process.env.MYSQL_URL;
+    console.log(`Connecting to MySQL via ${mysqlUrl ? 'MYSQL_URL' : 'individual vars'}: ${mysqlUrl ? mysqlUrl.replace(/:([^@]+)@/, ':***@') : `${process.env.MYSQL_HOST}:${process.env.MYSQL_PORT}`}`);
+
+    const poolConfig: any = mysqlUrl
+      ? { uri: mysqlUrl, waitForConnections: true, connectionLimit: 10, queueLimit: 0, timezone: '+00:00' }
+      : {
+          host: process.env.MYSQL_HOST || 'localhost',
+          user: process.env.MYSQL_USER || 'root',
+          password: process.env.MYSQL_PASSWORD || '',
+          database: process.env.MYSQL_DATABASE || 'blog_db',
+          port: parseInt(process.env.MYSQL_PORT || '3306'),
+          waitForConnections: true,
+          connectionLimit: 10,
+          queueLimit: 0,
+          timezone: '+00:00',
+          ssl: process.env.MYSQL_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+        };
+
+    pool = mysql.createPool(poolConfig);
 
     // Test connection
     const connection = await pool.getConnection();
