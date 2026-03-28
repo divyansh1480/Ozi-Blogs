@@ -21,7 +21,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
             <img
               src={coverImage}
               alt={blog.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover block group-hover:scale-105 transition-transform duration-300 origin-center"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
