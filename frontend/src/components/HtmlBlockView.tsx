@@ -63,6 +63,11 @@ export function HtmlBlockView({
     if (!editing || !editRef.current) return;
     editRef.current.innerHTML = node.attrs.html;
 
+    // Allow flex wrappers to shrink/grow when image is resized
+    editRef.current.querySelectorAll('div[style*="flex"]').forEach((el) => {
+      (el as HTMLElement).style.flexShrink = '1';
+    });
+
     editRef.current.querySelectorAll('img').forEach((rawImg) => {
       const img = rawImg as HTMLImageElement;
       img.style.display = 'block';
@@ -70,11 +75,8 @@ export function HtmlBlockView({
       img.ondragstart = (e) => e.preventDefault();
 
       if (isPlaceholder(img.src)) {
-        // Placeholder: click goes straight to upload
         img.onclick = (e) => { e.preventDefault(); e.stopPropagation(); handleImageUpload(img); };
       } else {
-        // Real image: click selects it for resize / replace
-        img.style.cursor = 'pointer';
         img.setAttribute('data-section-img', 'true');
         img.onclick = (e) => {
           e.preventDefault(); e.stopPropagation();
@@ -128,11 +130,25 @@ export function HtmlBlockView({
       if (p === 's'  || p === 'se' || p === 'sw') h = d.h0 + dy;
       if (p === 'n'  || p === 'ne' || p === 'nw') h = d.h0 - dy;
       w = Math.round(Math.max(20, w)); h = Math.round(Math.max(20, h));
-      selectedImg.el.style.width     = `${w}px`;
-      selectedImg.el.style.height    = `${h}px`;
-      selectedImg.el.style.maxWidth  = 'none';
-      selectedImg.el.style.maxHeight = 'none';
-      selectedImg.el.style.objectFit = 'fill';
+      const img = selectedImg.el;
+      // If image sits inside a flex-child wrapper, resize the WRAPPER as a %
+      // so text in sibling flex items rebalances naturally (no overflow)
+      const wrapper = img.parentElement;
+      const containerW = containerRef.current?.offsetWidth || 800;
+      const wPct = Math.min(100, Math.round((w / containerW) * 100));
+      if (wrapper && wrapper !== editRef.current && getComputedStyle(wrapper.parentElement!).display === 'flex') {
+        wrapper.style.width    = `${wPct}%`;
+        wrapper.style.maxWidth = '100%';
+        wrapper.style.flexShrink = '1';
+        img.style.width  = '100%';
+        img.style.height = `${h}px`;
+      } else {
+        img.style.width    = `${wPct}%`;
+        img.style.maxWidth = '100%';
+        img.style.height   = `${h}px`;
+      }
+      img.style.maxHeight = 'none';
+      img.style.objectFit = 'fill';
       refreshSelection();
       setBadge({ w, h });
     };
@@ -229,14 +245,20 @@ export function HtmlBlockView({
               </div>
             </div>
 
-            <div ref={containerRef} className="relative overflow-x-auto">
-              {/* Editable HTML — inline style needed to beat ProseMirror's caret overrides */}
+            <div ref={containerRef} className="relative">
+              {/* user-select:text overrides TipTap NodeView's user-select:none so caret is visible */}
               <div
                 ref={editRef}
                 contentEditable
                 suppressContentEditableWarning
-                className="outline-none px-4 py-3"
-                style={{ caretColor: '#1f2937', cursor: 'text', color: '#111827' }}
+                className="outline-none px-4 py-3 section-edit-area"
+                style={{
+                  caretColor: '#111827',
+                  cursor: 'text',
+                  color: '#111827',
+                  userSelect: 'text',
+                  WebkitUserSelect: 'text',
+                }}
               />
 
               {/* Placeholder upload overlays */}

@@ -44,6 +44,17 @@ select {
   font-family: inherit;
 }
 
+/* Section block edit area — force caret and text selection visible */
+.section-edit-area {
+  caret-color: #111827 !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  cursor: text;
+}
+.section-edit-area img {
+  cursor: pointer !important;
+}
+
 /* Section block images — always block, scale from center on hover */
 .section-block-view img {
   display: block;
