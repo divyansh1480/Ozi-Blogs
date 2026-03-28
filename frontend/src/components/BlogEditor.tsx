@@ -46,14 +46,21 @@ export default function BlogEditor({ initialData, onSave, saving }: BlogEditorPr
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => setShowSections(v => !v)}
-            className={`px-4 py-2 border rounded-lg text-sm transition ${showSections ? 'border-pink-400 bg-pink-50 text-pink-600' : 'border-gray-300 hover:bg-gray-50'}`}
+            onClick={() => !previewMode && setShowSections(v => !v)}
+            disabled={previewMode}
+            className={`px-4 py-2 border rounded-lg text-sm transition
+              ${previewMode
+                ? 'border-gray-200 text-gray-300 bg-gray-50 cursor-not-allowed opacity-50'
+                : showSections
+                  ? 'border-pink-400 bg-pink-50 text-pink-600'
+                  : 'border-gray-300 hover:bg-gray-50'
+              }`}
           >
             ⊞ Sections
           </button>
           <button
             type="button"
-            onClick={() => setPreviewMode(!previewMode)}
+            onClick={() => { setPreviewMode(v => { if (!v) setShowSections(false); return !v; }); }}
             className="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50 transition"
           >
             {previewMode ? '✏️ Edit' : '👁 Preview'}
