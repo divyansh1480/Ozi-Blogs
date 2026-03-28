@@ -66,11 +66,11 @@ export function HtmlBlockView({
     editRef.current.querySelectorAll('img').forEach((rawImg) => {
       const img = rawImg as HTMLImageElement;
       img.style.display = 'block';
+      img.style.cursor = 'pointer';
       img.ondragstart = (e) => e.preventDefault();
 
       if (isPlaceholder(img.src)) {
         // Placeholder: click goes straight to upload
-        img.style.cursor = 'pointer';
         img.onclick = (e) => { e.preventDefault(); e.stopPropagation(); handleImageUpload(img); };
       } else {
         // Real image: click selects it for resize / replace
@@ -123,11 +123,11 @@ export function HtmlBlockView({
       const dx = e.clientX - d.x0, dy = e.clientY - d.y0;
       const p = d.pos;
       let w = d.w0, h = d.h0;
-      if (p === 'e'  || p === 'ne' || p === 'se') w = Math.max(60, d.w0 + dx);
-      if (p === 'w'  || p === 'nw' || p === 'sw') w = Math.max(60, d.w0 - dx);
-      if (p === 's'  || p === 'se' || p === 'sw') h = Math.max(40, d.h0 + dy);
-      if (p === 'n'  || p === 'ne' || p === 'nw') h = Math.max(40, d.h0 - dy);
-      w = Math.round(w); h = Math.round(h);
+      if (p === 'e'  || p === 'ne' || p === 'se') w = d.w0 + dx;
+      if (p === 'w'  || p === 'nw' || p === 'sw') w = d.w0 - dx;
+      if (p === 's'  || p === 'se' || p === 'sw') h = d.h0 + dy;
+      if (p === 'n'  || p === 'ne' || p === 'nw') h = d.h0 - dy;
+      w = Math.round(Math.max(20, w)); h = Math.round(Math.max(20, h));
       selectedImg.el.style.width  = `${w}px`;
       selectedImg.el.style.height = `${h}px`;
       refreshSelection();
@@ -228,7 +228,7 @@ export function HtmlBlockView({
 
             <div ref={containerRef} className="relative">
               {/* Editable HTML */}
-              <div ref={editRef} contentEditable suppressContentEditableWarning className="outline-none px-4 py-3" />
+              <div ref={editRef} contentEditable suppressContentEditableWarning className="outline-none px-4 py-3 cursor-text caret-gray-800" />
 
               {/* Placeholder upload overlays */}
               {placeholders.map((ph, i) => (
