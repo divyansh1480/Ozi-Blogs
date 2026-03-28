@@ -141,6 +141,126 @@ const SAMPLE_BLOGS: { title: string; excerpt: string; content: string }[] = [
     excerpt: 'A consistent bedtime routine is one of the most powerful tools for better infant sleep. Here is ours — simple, calm, and effective.',
     content: '<h2>Why Routines Work</h2><p>Bedtime routines signal to your baby\'s brain that sleep is coming. Over time, the routine itself becomes a sleep cue — the bath, the feed, the song all begin to trigger drowsiness.</p><h3>Our 20-Minute Routine</h3><p>Bath (optional, 3x per week), massage, fresh diaper and sleep sack, feed in dim light, one song or book, put down drowsy but awake.</p>',
   },
+  {
+    title: 'How to Choose the Right Pram or Stroller',
+    excerpt: 'Lightweight, travel system, all-terrain — the choice is overwhelming. Here is how we narrowed it down and what we use every day.',
+    content: '<h2>Start With How You Live</h2><p>Do you mostly walk on smooth pavements or take gravel paths? Do you travel frequently? Do you live in a small flat with limited storage? Your lifestyle should drive the decision, not the brand.</p><h3>Key Features to Consider</h3><p>Weight, fold mechanism, seat recline (flat for newborns), wheel type, and whether it fits in your car boot.</p>',
+  },
+  {
+    title: 'Understanding Growth Spurts in the First Year',
+    excerpt: 'Growth spurts can make your baby suddenly hungrier, fussier, and harder to settle. Here is when to expect them and how to ride them out.',
+    content: '<h2>When They Happen</h2><p>Common growth spurt windows: 1-3 weeks, 6 weeks, 3 months, 6 months, and 9 months. Each lasts 2-7 days. Your baby may want to feed more frequently and sleep more or less than usual.</p>',
+  },
+  {
+    title: 'Swimming Lessons for Babies: What Age to Start',
+    excerpt: 'Baby swimming classes have real benefits — water confidence, coordination, and bonding. Here is what to look for and when to start.',
+    content: '<h2>From 6 Weeks Onwards</h2><p>Most pools and instructors recommend starting after 6 weeks, once your baby has had their first vaccinations. The earlier you start, the more natural the water feels to them.</p>',
+  },
+  {
+    title: 'The Best Baby Monitors in 2024',
+    excerpt: 'Audio, video, movement, breathing — baby monitors have come a long way. Here is how to choose one that fits your setup and budget.',
+    content: '<h2>Do You Need a Monitor at All?</h2><p>In a small home, a basic audio monitor is often enough. Video monitors are genuinely useful if your nursery is far from where you spend most of your time.</p><h3>Movement and Breathing Monitors</h3><p>These can offer reassurance but also cause unnecessary anxiety when false alarms occur. They are not a substitute for a safe sleep environment.</p>',
+  },
+  {
+    title: 'Weaning Off the Dummy: A Gentle Approach',
+    excerpt: 'Dummies are a helpful soothing tool — until it is time to let them go. Here is a calm, gradual strategy that worked for us.',
+    content: '<h2>When to Start Thinking About It</h2><p>Most dentists recommend phasing out dummy use by age 2, when the habit can start to affect tooth alignment. Emotionally, there is no wrong time — follow your child\'s lead and choose a calm period to make the transition.</p>',
+  },
+  {
+    title: 'Preparing for Your Baby\'s First Cold',
+    excerpt: 'The first cold is scary. Here is how to manage symptoms safely, when to call the doctor, and how to help your baby sleep when congested.',
+    content: '<h2>Newborns Are Obligate Nasal Breathers</h2><p>Babies under 3 months breathe almost entirely through their nose. A stuffy nose is therefore much more distressing for them than for older children. Saline drops and a gentle nasal aspirator can make a significant difference.</p>',
+  },
+  {
+    title: 'Building Healthy Eating Habits From the Start',
+    excerpt: 'The foods and attitudes around eating that you introduce in infancy lay the groundwork for lifelong habits. Here is how to start well.',
+    content: '<h2>Variety From the Beginning</h2><p>Offer a wide range of flavours and textures from 6 months. Babies who are exposed to variety early are more likely to accept new foods as toddlers. Avoid adding salt or sugar to baby food.</p>',
+  },
+  {
+    title: 'Baby Sign Language: How and Why We Started',
+    excerpt: 'Teaching basic signs to babies before they can speak reduces frustration and builds communication. Here is how we introduced it and what signs helped most.',
+    content: '<h2>Why It Works</h2><p>Babies develop motor control before vocal ability. They can physically make simple hand signs months before they can produce words. Signs for "more", "milk", "all done", and "help" have an enormous impact on daily life.</p>',
+  },
+  {
+    title: 'Managing Eczema in Babies and Young Toddlers',
+    excerpt: 'Eczema affects around 1 in 5 children. Here is what we learned about triggers, moisturising routines, and when to seek medical help.',
+    content: '<h2>The Moisturiser Is Your Best Friend</h2><p>Twice-daily emollient application — even when the skin looks clear — is the foundation of eczema management. Apply immediately after bath while the skin is still slightly damp to lock in moisture.</p>',
+  },
+  {
+    title: 'Night Nursing: Benefits, Challenges, and When to Stop',
+    excerpt: 'Feeding at night is normal and beneficial in the early months. Here is an honest look at what the research says and how to decide when to night wean.',
+    content: '<h2>Night Feeds Are Normal</h2><p>Newborns need to feed every 2-4 hours around the clock. Their stomachs are small and breast milk or formula digests quickly. Expecting a newborn to sleep through the night is biologically unrealistic.</p>',
+  },
+  {
+    title: 'Sensory Play Ideas for Every Stage of the First Year',
+    excerpt: 'Sensory play supports brain development, curiosity, and language. These are our favourite low-mess, age-appropriate activities from birth to 12 months.',
+    content: '<h2>Birth to 3 Months</h2><p>High-contrast black-and-white images, soft textured fabrics, gentle music, and your own voice and face are the richest sensory experiences for a newborn.</p><h2>4-6 Months</h2><p>Crinkly toys, water play in a shallow dish, mirrors, rattles, and soft chew toys are perfect as babies start reaching and mouthing everything.</p>',
+  },
+  {
+    title: 'How We Night Weaned at 9 Months',
+    excerpt: 'Night weaning is not the same as sleep training. Here is the gradual approach we used to reduce night feeds without any crying it out.',
+    content: '<h2>Our Timeline</h2><p>We began at 9 months when our son was healthy, growing well, and eating three solid meals a day — a good sign he did not need calories overnight. We reduced night feeds one at a time over two weeks, shortening each feed gradually.</p>',
+  },
+  {
+    title: 'Postnatal Depression: What It Looks Like and Where to Get Help',
+    excerpt: 'PND is more common than most people know and is not a reflection of your love for your baby. Here is how to recognise it and take the first steps toward support.',
+    content: '<h2>More Than "Baby Blues"</h2><p>The baby blues — tearfulness, mood swings, and anxiety in the first week — are normal and typically resolve within 10 days. Postnatal depression is different: it persists, deepens, and interferes with daily life. It can begin at any time in the first year.</p>',
+  },
+  {
+    title: 'Returning to Exercise After Birth: A Realistic Guide',
+    excerpt: 'Your body needs time and the right approach before returning to exercise. Here is a realistic, evidence-based guide to rebuilding fitness postpartum.',
+    content: '<h2>The First 6 Weeks</h2><p>Gentle walking and pelvic floor exercises are the only two things recommended in the first six weeks. Your uterus, ligaments, and pelvic floor are still healing regardless of how you gave birth.</p>',
+  },
+  {
+    title: 'Choosing a Paediatrician: Questions to Ask',
+    excerpt: 'Your baby\'s doctor is one of the most important choices you will make. Here is what to ask and what to look for in the first appointment.',
+    content: '<h2>Before the Baby Arrives</h2><p>Ideally, choose your paediatrician before the birth. Many practices offer a free meet-and-greet appointment. Use this to assess communication style, availability, and how well they align with your approach to parenting.</p>',
+  },
+  {
+    title: 'Vitamin D Supplements for Breastfed Babies',
+    excerpt: 'Breast milk is remarkable — but it is low in vitamin D. Here is what the guidance says and how to supplement safely from birth.',
+    content: '<h2>Why Vitamin D Matters</h2><p>Vitamin D is essential for bone development and immune function. Unlike formula (which is fortified), breast milk contains very little vitamin D — regardless of the mother\'s own vitamin D levels.</p><h3>What the NHS Recommends</h3><p>Breastfed babies should be given a daily vitamin D supplement of 8.5-10 micrograms from birth until they are having 500ml of formula per day.</p>',
+  },
+  {
+    title: 'Understanding the Moro Reflex (and Why It Wakes Your Baby)',
+    excerpt: 'The startle reflex is the most common reason newborns wake themselves up. Here is what it is, when it fades, and how to work with it.',
+    content: '<h2>What Is the Moro Reflex?</h2><p>The Moro (startle) reflex is an involuntary response to a sudden change in position or loud noise. The baby throws their arms out, arches their back, then pulls their arms in. It typically peaks in the first 4-8 weeks and fades by 4-6 months.</p><h3>Swaddling and the Moro Reflex</h3><p>A snug swaddle contains the arm movement of the Moro reflex, which is why swaddled babies often sleep longer in the early weeks.</p>',
+  },
+  {
+    title: 'Flying With a Baby for the First Time',
+    excerpt: 'Our first flight with a 5-month-old taught us everything. Here is what we wish we had known — from booking to landing.',
+    content: '<h2>Book a Bassinet Seat</h2><p>For long-haul flights, most airlines offer bassinet attachments on bulkhead seats. Book early — these go fast. Your baby can sleep in the bassinet during the flight, which saves your arms considerably.</p><h3>Feeding During Take-Off and Landing</h3><p>Feeding during ascent and descent helps equalise ear pressure. Bring more milk or formula than you think you need.</p>',
+  },
+  {
+    title: 'When to Worry About Your Baby\'s Development',
+    excerpt: 'Every baby develops at their own pace, but some signs are worth discussing with your doctor. Here is what to look for at each stage.',
+    content: '<h2>3 Months</h2><p>Discuss with your doctor if your baby is not tracking moving objects with their eyes, not responding to loud sounds, or not smiling by 3 months.</p><h2>6 Months</h2><p>Concerns at 6 months include not reaching for objects, not making any vowel sounds, and not rolling in either direction.</p><h2>9-12 Months</h2><p>By 9 months, most babies babble, crawl or move around in some way, and gesture. Not doing so is worth mentioning, though development varies widely.</p>',
+  },
+  {
+    title: 'The Science of Baby Talk (Motherese)',
+    excerpt: 'That sing-song, high-pitched voice you instinctively use with your baby? Research shows it is one of the most powerful things you can do for their language development.',
+    content: '<h2>What Is Motherese?</h2><p>Infant-directed speech — also called "motherese" or "parentese" — is characterised by slower tempo, higher pitch, exaggerated intonation, and simple vocabulary. Adults produce it instinctively across cultures and languages.</p><h3>Why It Works</h3><p>Studies show that babies pay more attention to infant-directed speech than adult-directed speech. It helps them segment words from continuous speech and learn phonemes more effectively.</p>',
+  },
+  {
+    title: 'Reading the Room: Your Baby\'s Tired and Hunger Cues',
+    excerpt: 'Before the crying starts, your baby is already communicating. Learning these subtle early cues can reduce stress for everyone.',
+    content: '<h2>Early Hunger Cues</h2><p>Rooting (turning head side to side, mouth open), sucking on fists or tongue, and light fussiness are all early hunger signals. By the time your baby is crying, they are past the easy feeding window.</p><h2>Tired Cues</h2><p>Yawning, eye rubbing, glazed stare, and decreased activity are signs your baby is ready for sleep. Acting on these early cues means an easier settle.</p>',
+  },
+  {
+    title: 'Why Outdoor Time Matters for Babies',
+    excerpt: 'Fresh air, natural light, and nature exposure have measurable benefits for babies from the first weeks of life. Here is how to make it a daily habit.',
+    content: '<h2>Regulating the Body Clock</h2><p>Natural light exposure in the morning is one of the most effective ways to help establish your baby\'s circadian rhythm. Even 20 minutes outside in the morning makes a difference to day-night orientation.</p>',
+  },
+  {
+    title: 'Navigating Unsolicited Parenting Advice',
+    excerpt: 'Everyone has an opinion. Here is how to receive advice gracefully, protect your choices, and stay confident in your own parenting.',
+    content: '<h2>The Advice Avalanche</h2><p>From the moment you announce a pregnancy, advice arrives from all directions — family, friends, strangers at the supermarket. Most of it is well-intentioned. Some of it is outdated. Almost none of it is asked for.</p><h3>A Simple Script</h3><p>"Thank you, I\'ll think about that" ends most conversations politely without agreement or argument. You do not need to justify your choices.</p>',
+  },
+  {
+    title: 'Our Honest Review of Baby Food Pouches',
+    excerpt: 'Pouches are convenient, but are they nutritionally complete? Here is a balanced look at how to use them wisely without them becoming a crutch.',
+    content: '<h2>The Convenience Factor Is Real</h2><p>On a long journey, at a restaurant, or during a busy week, pouches are genuinely useful. The problem arises when they replace varied textures and family mealtimes rather than supplementing them.</p><h3>What to Look For on the Label</h3><p>Avoid pouches with added sugar or salt. Look for ones with vegetables as the primary ingredient, not just fruit. Vary brands and flavours to prevent flavour fixation.</p>',
+  },
 ];
 
 async function seed() {

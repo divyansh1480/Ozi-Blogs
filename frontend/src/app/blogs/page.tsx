@@ -119,7 +119,7 @@ function BlogsContent() {
           loadMore();
         }
       },
-      { rootMargin: '0px 0px 500px 0px', threshold: 0 }
+      { rootMargin: '0px 0px 200px 0px', threshold: 0 }
     );
 
     if (sentinelRef.current) observerRef.current.observe(sentinelRef.current);
@@ -214,7 +214,7 @@ function BlogsContent() {
             {blogs.map((blog, i) => (
               <div
                 key={blog.id}
-                className={newFromIndex !== null && i >= newFromIndex ? 'blog-card-enter' : ''}
+                className={`h-full${newFromIndex !== null && i >= newFromIndex ? ' blog-card-enter' : ''}`}
                 style={newFromIndex !== null && i >= newFromIndex
                   ? { animationDelay: `${(i - newFromIndex) * 60}ms` }
                   : undefined}

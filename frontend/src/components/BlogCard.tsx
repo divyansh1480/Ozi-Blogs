@@ -13,7 +13,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
   const coverImage = extractFirstImage(blog.content);
 
   return (
-    <Link href={`/blogs/${blog.slug}`} className="block group">
+    <Link href={`/blogs/${blog.slug}`} className="block group h-full">
       <article className="bg-white rounded-xl shadow-sm border border-gray-100 group-hover:shadow-md transition-shadow overflow-hidden h-full flex flex-col">
         {/* Cover image — fixed height, always present as a placeholder if missing */}
         <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 flex-shrink-0">
