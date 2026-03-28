@@ -128,8 +128,11 @@ export function HtmlBlockView({
       if (p === 's'  || p === 'se' || p === 'sw') h = d.h0 + dy;
       if (p === 'n'  || p === 'ne' || p === 'nw') h = d.h0 - dy;
       w = Math.round(Math.max(20, w)); h = Math.round(Math.max(20, h));
-      selectedImg.el.style.width  = `${w}px`;
-      selectedImg.el.style.height = `${h}px`;
+      selectedImg.el.style.width     = `${w}px`;
+      selectedImg.el.style.height    = `${h}px`;
+      selectedImg.el.style.maxWidth  = 'none';
+      selectedImg.el.style.maxHeight = 'none';
+      selectedImg.el.style.objectFit = 'fill';
       refreshSelection();
       setBadge({ w, h });
     };
@@ -226,9 +229,15 @@ export function HtmlBlockView({
               </div>
             </div>
 
-            <div ref={containerRef} className="relative">
-              {/* Editable HTML */}
-              <div ref={editRef} contentEditable suppressContentEditableWarning className="outline-none px-4 py-3 cursor-text caret-gray-800" />
+            <div ref={containerRef} className="relative overflow-x-auto">
+              {/* Editable HTML — inline style needed to beat ProseMirror's caret overrides */}
+              <div
+                ref={editRef}
+                contentEditable
+                suppressContentEditableWarning
+                className="outline-none px-4 py-3"
+                style={{ caretColor: '#1f2937', cursor: 'text', color: '#111827' }}
+              />
 
               {/* Placeholder upload overlays */}
               {placeholders.map((ph, i) => (
