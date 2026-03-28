@@ -16,6 +16,7 @@ export async function initializeDatabase() {
       connectionLimit: 10,
       queueLimit: 0,
       timezone: '+00:00',
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
     });
 
     // Test connection
