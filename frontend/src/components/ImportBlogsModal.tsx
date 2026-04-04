@@ -70,15 +70,15 @@ export default function ImportBlogsModal({ onClose, onImported }: ImportBlogsMod
 
         <div className="px-6 py-5 space-y-5">
           {/* Template download */}
-          <div className="bg-pink-50 border border-pink-100 rounded-xl p-4">
-            <p className="text-sm font-medium text-pink-700 mb-1">Expected columns</p>
-            <p className="text-xs text-pink-600 font-mono mb-3">title · content · excerpt · status</p>
+          <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+            <p className="text-sm font-medium text-primary-dark mb-1">Expected columns</p>
+            <p className="text-xs text-primary-dark font-mono mb-3">title · content · excerpt · status</p>
             <p className="text-xs text-gray-500 mb-3">
               <strong>title</strong> and <strong>content</strong> are required. <strong>status</strong> can be <code className="bg-white px-1 rounded">draft</code> or <code className="bg-white px-1 rounded">published</code> (defaults to draft).
             </p>
             <button
               onClick={downloadTemplate}
-              className="text-xs text-pink-500 font-medium hover:text-pink-600 underline underline-offset-2"
+              className="text-xs text-primary font-medium hover:text-primary-dark underline underline-offset-2"
             >
               Download template →
             </button>
@@ -88,7 +88,7 @@ export default function ImportBlogsModal({ onClose, onImported }: ImportBlogsMod
           {!result && (
             <div
               onClick={() => inputRef.current?.click()}
-              className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-pink-300 hover:bg-pink-50 transition"
+              className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/10 transition"
             >
               <input ref={inputRef} type="file" accept=".xlsx,.xls" onChange={handleFileChange} className="hidden" />
               {file ? (
@@ -154,7 +154,7 @@ export default function ImportBlogsModal({ onClose, onImported }: ImportBlogsMod
             <button
               onClick={handleImport}
               disabled={loading || !file}
-              className="px-5 py-2 text-sm bg-pink-400 text-white rounded-lg hover:bg-pink-500 transition disabled:opacity-50 font-medium"
+              className="px-5 py-2 text-sm bg-primary-light text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 font-medium"
             >
               {loading ? 'Importing...' : 'Import Blogs'}
             </button>
@@ -162,7 +162,7 @@ export default function ImportBlogsModal({ onClose, onImported }: ImportBlogsMod
           {result && (
             <button
               onClick={() => { setResult(null); setFile(null); }}
-              className="px-5 py-2 text-sm bg-pink-400 text-white rounded-lg hover:bg-pink-500 transition font-medium"
+              className="px-5 py-2 text-sm bg-primary-light text-white rounded-lg hover:bg-primary-dark transition font-medium"
             >
               Import More
             </button>

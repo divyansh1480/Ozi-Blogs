@@ -37,7 +37,7 @@ export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
       className="absolute top-full right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 z-[70] overflow-hidden"
     >
       {/* Profile header */}
-      <div className="bg-gradient-to-br from-pink-400 to-purple-500 px-5 py-5 flex items-center gap-3">
+      <div className="bg-gradient-to-br from-primary-light to-purple-500 px-5 py-5 flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center text-white font-bold text-xl shrink-0">
           {initial}
         </div>
@@ -52,21 +52,21 @@ export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
         <Link
           href={`/users/${user?.username}`}
           onClick={onClose}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-pink-50 hover:text-pink-500 transition font-medium"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-primary/10 hover:text-primary transition font-medium"
         >
           <span>👤</span> View Profile
         </Link>
         <Link
           href="/dashboard"
           onClick={onClose}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-pink-50 hover:text-pink-500 transition font-medium"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-primary/10 hover:text-primary transition font-medium"
         >
           <span>⚡</span> Dashboard
         </Link>
         <Link
           href="/blogs/new"
           onClick={onClose}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-pink-50 hover:text-pink-500 transition font-medium"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-primary/10 hover:text-primary transition font-medium"
         >
           <span>✏️</span> Write Blog
         </Link>

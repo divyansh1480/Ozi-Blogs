@@ -16,7 +16,7 @@ const PLACEHOLDER_IMG_SQ = 'https://placehold.co/400x400/fce7f3/f472b6?text=Imag
 
 // ── Preview building blocks ────────────────────────────────────────────────
 const ImgBox = ({ w = '100%', h = '100%', radius = 4 }: { w?: string; h?: string; radius?: number }) => (
-  <div style={{ width: w, height: h, background: 'linear-gradient(135deg,#fce7f3,#fbcfe8)', borderRadius: radius, flexShrink: 0 }} />
+  <div style={{ width: w, height: h, background: 'linear-gradient(135deg,#f0dde6,#e8c4d0)', borderRadius: radius, flexShrink: 0 }} />
 );
 const TextLines = ({ lines = [70, 100, 80] }: { lines?: number[] }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
@@ -130,11 +130,11 @@ const SECTIONS: (Section & { category: Category })[] = [
     html: `<div style="display:flex;gap:16px;margin:32px 0;flex-wrap:wrap">
   <figure style="flex:1;min-width:200px;margin:0;text-align:center">
     <img src="${PLACEHOLDER_IMG_SQ}" style="width:100%;border-radius:10px;object-fit:cover" alt="Image 1" />
-    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic">Caption for image one</figcaption>
+    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic"></figcaption>
   </figure>
   <figure style="flex:1;min-width:200px;margin:0;text-align:center">
     <img src="${PLACEHOLDER_IMG_SQ}" style="width:100%;border-radius:10px;object-fit:cover" alt="Image 2" />
-    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic">Caption for image two</figcaption>
+    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic"></figcaption>
   </figure>
 </div>`,
   },
@@ -156,15 +156,15 @@ const SECTIONS: (Section & { category: Category })[] = [
     html: `<div style="display:flex;gap:14px;margin:32px 0;flex-wrap:wrap">
   <figure style="flex:1;min-width:140px;margin:0;text-align:center">
     <img src="${PLACEHOLDER_IMG_SQ}" style="width:100%;border-radius:10px;object-fit:cover;aspect-ratio:1" alt="Image 1" />
-    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic">Caption one</figcaption>
+    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic"></figcaption>
   </figure>
   <figure style="flex:1;min-width:140px;margin:0;text-align:center">
     <img src="${PLACEHOLDER_IMG_SQ}" style="width:100%;border-radius:10px;object-fit:cover;aspect-ratio:1" alt="Image 2" />
-    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic">Caption two</figcaption>
+    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic"></figcaption>
   </figure>
   <figure style="flex:1;min-width:140px;margin:0;text-align:center">
     <img src="${PLACEHOLDER_IMG_SQ}" style="width:100%;border-radius:10px;object-fit:cover;aspect-ratio:1" alt="Image 3" />
-    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic">Caption three</figcaption>
+    <figcaption style="margin-top:8px;font-size:0.8rem;color:#6B7280;font-style:italic"></figcaption>
   </figure>
 </div>`,
   },
@@ -181,7 +181,7 @@ const SECTIONS: (Section & { category: Category })[] = [
     ),
     html: `<figure style="margin:32px 0;text-align:center">
   <img src="${PLACEHOLDER_IMG_WIDE}" style="width:100%;border-radius:12px;object-fit:cover;max-height:500px" alt="Image" />
-  <figcaption style="margin-top:12px;font-size:0.875rem;color:#6B7280;font-style:italic">Add a caption describing this image</figcaption>
+  <figcaption style="margin-top:12px;font-size:0.875rem;color:#6B7280;font-style:italic"></figcaption>
 </figure>`,
   },
 
@@ -192,13 +192,13 @@ const SECTIONS: (Section & { category: Category })[] = [
     label: 'Hero Banner',
     description: 'Full-width gradient banner',
     preview: (
-      <div style={{ height: 56, background: 'linear-gradient(135deg,#fce7f3,#ede9fe)', borderRadius: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '0 16px' }}>
-        <div style={{ height: 9, width: '55%', background: '#f472b6', borderRadius: 3 }} />
+      <div style={{ height: 56, background: 'linear-gradient(135deg,#f0dde6,#ede9fe)', borderRadius: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '0 16px' }}>
+        <div style={{ height: 9, width: '55%', background: '#C04878', borderRadius: 3 }} />
         <div style={{ height: 5, width: '75%', background: '#e9d5ff', borderRadius: 3 }} />
         <div style={{ height: 5, width: '60%', background: '#e9d5ff', borderRadius: 3 }} />
       </div>
     ),
-    html: `<div style="background:linear-gradient(135deg,#fdf2f8 0%,#ede9fe 100%);border-radius:16px;padding:48px 40px;margin:32px 0;text-align:center">
+    html: `<div style="background:linear-gradient(135deg,#f5e8ee 0%,#ede9fe 100%);border-radius:16px;padding:48px 40px;margin:32px 0;text-align:center">
   <h2 style="font-size:2rem;font-weight:800;color:#111827;margin:0 0 16px 0;line-height:1.3">Your Blog Section Title</h2>
   <p style="font-size:1.1rem;color:#6B7280;max-width:560px;margin:0 auto;line-height:1.8">Write an engaging subtitle or intro paragraph here. This banner is great for opening a new chapter or highlighting a key topic.</p>
 </div>`,
@@ -239,26 +239,26 @@ const SECTIONS: (Section & { category: Category })[] = [
     preview: (
       <div style={{ display: 'flex', gap: 5, height: 56 }}>
         {[0, 1, 2].map(i => (
-          <div key={i} style={{ flex: 1, background: '#fdf2f8', borderRadius: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '4px' }}>
+          <div key={i} style={{ flex: 1, background: '#f5e8ee', borderRadius: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '4px' }}>
             <div style={{ fontSize: 11 }}>✦</div>
-            <div style={{ height: 6, width: '70%', background: '#fbcfe8', borderRadius: 3 }} />
+            <div style={{ height: 6, width: '70%', background: '#e8c4d0', borderRadius: 3 }} />
             <div style={{ height: 4, width: '90%', background: '#e5e7eb', borderRadius: 3 }} />
           </div>
         ))}
       </div>
     ),
     html: `<div style="display:flex;gap:16px;margin:32px 0;flex-wrap:wrap">
-  <div style="flex:1;min-width:160px;background:#fdf2f8;border-radius:12px;padding:24px;text-align:center">
+  <div style="flex:1;min-width:160px;background:#f5e8ee;border-radius:12px;padding:24px;text-align:center">
     <div style="font-size:2rem;margin-bottom:12px">🌸</div>
     <h4 style="margin:0 0 8px 0;color:#111827;font-size:1rem;font-weight:700">Point One</h4>
     <p style="color:#6B7280;margin:0;font-size:0.875rem;line-height:1.6">Short description for this point or feature.</p>
   </div>
-  <div style="flex:1;min-width:160px;background:#fdf2f8;border-radius:12px;padding:24px;text-align:center">
+  <div style="flex:1;min-width:160px;background:#f5e8ee;border-radius:12px;padding:24px;text-align:center">
     <div style="font-size:2rem;margin-bottom:12px">💡</div>
     <h4 style="margin:0 0 8px 0;color:#111827;font-size:1rem;font-weight:700">Point Two</h4>
     <p style="color:#6B7280;margin:0;font-size:0.875rem;line-height:1.6">Short description for this point or feature.</p>
   </div>
-  <div style="flex:1;min-width:160px;background:#fdf2f8;border-radius:12px;padding:24px;text-align:center">
+  <div style="flex:1;min-width:160px;background:#f5e8ee;border-radius:12px;padding:24px;text-align:center">
     <div style="font-size:2rem;margin-bottom:12px">🎯</div>
     <h4 style="margin:0 0 8px 0;color:#111827;font-size:1rem;font-weight:700">Point Three</h4>
     <p style="color:#6B7280;margin:0;font-size:0.875rem;line-height:1.6">Short description for this point or feature.</p>
@@ -273,9 +273,9 @@ const SECTIONS: (Section & { category: Category })[] = [
     preview: (
       <div style={{ display: 'flex', gap: 6, height: 56 }}>
         {[0, 1].map(i => (
-          <div key={i} style={{ flex: 1, background: '#fdf2f8', borderRadius: 6, padding: '6px 8px', display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <div key={i} style={{ flex: 1, background: '#f5e8ee', borderRadius: 6, padding: '6px 8px', display: 'flex', flexDirection: 'column', gap: 3 }}>
             <div style={{ fontSize: 12 }}>⭐</div>
-            <div style={{ height: 6, background: '#fbcfe8', borderRadius: 3, width: '70%' }} />
+            <div style={{ height: 6, background: '#e8c4d0', borderRadius: 3, width: '70%' }} />
             <div style={{ height: 4, background: '#e5e7eb', borderRadius: 3 }} />
             <div style={{ height: 4, background: '#e5e7eb', borderRadius: 3, width: '80%' }} />
           </div>
@@ -283,12 +283,12 @@ const SECTIONS: (Section & { category: Category })[] = [
       </div>
     ),
     html: `<div style="display:flex;gap:16px;margin:32px 0;flex-wrap:wrap">
-  <div style="flex:1;min-width:200px;background:#fdf2f8;border-radius:14px;padding:28px">
+  <div style="flex:1;min-width:200px;background:#f5e8ee;border-radius:14px;padding:28px">
     <div style="font-size:2rem;margin-bottom:14px">⭐</div>
     <h4 style="margin:0 0 8px 0;color:#111827;font-size:1.05rem;font-weight:700">Feature Title</h4>
     <p style="color:#6B7280;margin:0;font-size:0.875rem;line-height:1.7">Describe this feature or benefit in a short sentence or two.</p>
   </div>
-  <div style="flex:1;min-width:200px;background:#fdf2f8;border-radius:14px;padding:28px">
+  <div style="flex:1;min-width:200px;background:#f5e8ee;border-radius:14px;padding:28px">
     <div style="font-size:2rem;margin-bottom:14px">🎯</div>
     <h4 style="margin:0 0 8px 0;color:#111827;font-size:1.05rem;font-weight:700">Feature Title</h4>
     <p style="color:#6B7280;margin:0;font-size:0.875rem;line-height:1.7">Describe this feature or benefit in a short sentence or two.</p>
@@ -343,13 +343,13 @@ const SECTIONS: (Section & { category: Category })[] = [
     label: 'Pull Quote',
     description: 'Highlighted quote block',
     preview: (
-      <div style={{ borderLeft: '3px solid #f472b6', paddingLeft: 10, height: 56, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 5, background: '#fdf2f8', borderRadius: '0 6px 6px 0' }}>
-        <div style={{ height: 6, background: '#fbcfe8', borderRadius: 3 }} />
-        <div style={{ height: 6, background: '#fbcfe8', borderRadius: 3, width: '80%' }} />
+      <div style={{ borderLeft: '3px solid #C04878', paddingLeft: 10, height: 56, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 5, background: '#f5e8ee', borderRadius: '0 6px 6px 0' }}>
+        <div style={{ height: 6, background: '#e8c4d0', borderRadius: 3 }} />
+        <div style={{ height: 6, background: '#e8c4d0', borderRadius: 3, width: '80%' }} />
         <div style={{ height: 4, background: '#e5e7eb', borderRadius: 3, width: '40%' }} />
       </div>
     ),
-    html: `<blockquote style="border-left:4px solid #f472b6;padding:20px 28px;margin:32px 0;background:#fdf2f8;border-radius:0 12px 12px 0">
+    html: `<blockquote style="border-left:4px solid #C04878;padding:20px 28px;margin:32px 0;background:#f5e8ee;border-radius:0 12px 12px 0">
   <p style="font-size:1.25rem;font-style:italic;color:#374151;margin:0 0 12px 0;line-height:1.7">"Write an inspiring or key quote from your blog here. Make it stand out from the rest of the content."</p>
   <cite style="display:block;font-size:0.875rem;color:#9CA3AF;font-style:normal">— Author or Source</cite>
 </blockquote>`,
@@ -360,16 +360,16 @@ const SECTIONS: (Section & { category: Category })[] = [
     label: 'Info Callout',
     description: 'Tip or important info box',
     preview: (
-      <div style={{ background: '#fdf2f8', border: '1px solid #fbcfe8', borderRadius: 6, padding: '6px 8px', height: 56, display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div style={{ background: '#f5e8ee', border: '1px solid #e8c4d0', borderRadius: 6, padding: '6px 8px', height: 56, display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ fontSize: 20 }}>💡</span>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <div style={{ height: 7, background: '#fbcfe8', borderRadius: 3, width: '55%' }} />
+          <div style={{ height: 7, background: '#e8c4d0', borderRadius: 3, width: '55%' }} />
           <div style={{ height: 5, background: '#e5e7eb', borderRadius: 3 }} />
           <div style={{ height: 5, background: '#e5e7eb', borderRadius: 3, width: '75%' }} />
         </div>
       </div>
     ),
-    html: `<div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:14px;padding:20px 24px;margin:32px 0;display:flex;gap:14px;align-items:flex-start">
+    html: `<div style="background:#f5e8ee;border:1px solid #e8c4d0;border-radius:14px;padding:20px 24px;margin:32px 0;display:flex;gap:14px;align-items:flex-start">
   <span style="font-size:1.5rem;flex-shrink:0;margin-top:2px">💡</span>
   <div>
     <p style="font-weight:700;color:#be185d;margin:0 0 6px 0">Pro Tip</p>
@@ -409,7 +409,7 @@ const SECTIONS: (Section & { category: Category })[] = [
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, height: 56, justifyContent: 'center' }}>
         {[0, 1, 2].map(i => (
           <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
-            <div style={{ width: 14, height: 14, background: '#f472b6', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 14, height: 14, background: '#C04878', borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ width: 5, height: 5, background: 'white', borderRadius: '50%' }} />
             </div>
             <div style={{ height: 5, background: '#e5e7eb', borderRadius: 3, flex: 1 }} />
@@ -419,15 +419,15 @@ const SECTIONS: (Section & { category: Category })[] = [
     ),
     html: `<div style="margin:32px 0">
   <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px">
-    <div style="width:36px;height:36px;background:#f472b6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.875rem;flex-shrink:0">1</div>
+    <div style="width:36px;height:36px;background:#C04878;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.875rem;flex-shrink:0">1</div>
     <div style="padding-top:6px"><strong style="color:#111827">Step One</strong><p style="margin:6px 0 0 0;color:#6B7280;font-size:0.9rem;line-height:1.7">Describe what the reader should do in this step. Be clear and actionable.</p></div>
   </div>
   <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px">
-    <div style="width:36px;height:36px;background:#f472b6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.875rem;flex-shrink:0">2</div>
+    <div style="width:36px;height:36px;background:#C04878;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.875rem;flex-shrink:0">2</div>
     <div style="padding-top:6px"><strong style="color:#111827">Step Two</strong><p style="margin:6px 0 0 0;color:#6B7280;font-size:0.9rem;line-height:1.7">Describe what the reader should do in this step. Be clear and actionable.</p></div>
   </div>
   <div style="display:flex;gap:16px;align-items:flex-start">
-    <div style="width:36px;height:36px;background:#f472b6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.875rem;flex-shrink:0">3</div>
+    <div style="width:36px;height:36px;background:#C04878;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.875rem;flex-shrink:0">3</div>
     <div style="padding-top:6px"><strong style="color:#111827">Step Three</strong><p style="margin:6px 0 0 0;color:#6B7280;font-size:0.9rem;line-height:1.7">Describe what the reader should do in this step. Be clear and actionable.</p></div>
   </div>
 </div>`,
@@ -440,24 +440,24 @@ const SECTIONS: (Section & { category: Category })[] = [
     preview: (
       <div style={{ display: 'flex', gap: 5, height: 56 }}>
         {[0, 1, 2].map(i => (
-          <div key={i} style={{ flex: 1, background: '#fdf2f8', borderRadius: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-            <div style={{ height: 11, width: '55%', background: '#f472b6', borderRadius: 3 }} />
+          <div key={i} style={{ flex: 1, background: '#f5e8ee', borderRadius: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+            <div style={{ height: 11, width: '55%', background: '#C04878', borderRadius: 3 }} />
             <div style={{ height: 5, width: '70%', background: '#e5e7eb', borderRadius: 3 }} />
           </div>
         ))}
       </div>
     ),
     html: `<div style="display:flex;gap:16px;margin:32px 0;flex-wrap:wrap">
-  <div style="flex:1;min-width:120px;background:#fdf2f8;border-radius:14px;padding:24px;text-align:center">
-    <p style="font-size:2.2rem;font-weight:800;color:#ec4899;margin:0">85%</p>
+  <div style="flex:1;min-width:120px;background:#f5e8ee;border-radius:14px;padding:24px;text-align:center">
+    <p style="font-size:2.2rem;font-weight:800;color:#AC2660;margin:0">85%</p>
     <p style="font-size:0.875rem;color:#6B7280;margin:8px 0 0 0">Stat Label</p>
   </div>
-  <div style="flex:1;min-width:120px;background:#fdf2f8;border-radius:14px;padding:24px;text-align:center">
-    <p style="font-size:2.2rem;font-weight:800;color:#ec4899;margin:0">2x</p>
+  <div style="flex:1;min-width:120px;background:#f5e8ee;border-radius:14px;padding:24px;text-align:center">
+    <p style="font-size:2.2rem;font-weight:800;color:#AC2660;margin:0">2x</p>
     <p style="font-size:0.875rem;color:#6B7280;margin:8px 0 0 0">Stat Label</p>
   </div>
-  <div style="flex:1;min-width:120px;background:#fdf2f8;border-radius:14px;padding:24px;text-align:center">
-    <p style="font-size:2.2rem;font-weight:800;color:#ec4899;margin:0">10k+</p>
+  <div style="flex:1;min-width:120px;background:#f5e8ee;border-radius:14px;padding:24px;text-align:center">
+    <p style="font-size:2.2rem;font-weight:800;color:#AC2660;margin:0">10k+</p>
     <p style="font-size:0.875rem;color:#6B7280;margin:8px 0 0 0">Stat Label</p>
   </div>
 </div>`,
@@ -498,7 +498,7 @@ export default function SectionTemplates({ onInsert, onClose }: Props) {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 text-xs font-medium rounded-t-lg border-b-2 transition whitespace-nowrap ${
               activeCategory === cat
-                ? 'border-pink-400 text-pink-600 bg-pink-50'
+                ? 'border-primary-light text-primary-dark bg-primary/10'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
             }`}
           >
@@ -513,13 +513,13 @@ export default function SectionTemplates({ onInsert, onClose }: Props) {
           <button
             key={section.id}
             onClick={() => { onInsert(section.html); onClose(); }}
-            className="group text-left border border-gray-200 rounded-xl p-3 hover:border-pink-300 hover:shadow-sm transition-all duration-150 hover:bg-pink-50/40 active:scale-[0.98]"
+            className="group text-left border border-gray-200 rounded-xl p-3 hover:border-primary/50 hover:shadow-sm transition-all duration-150 hover:bg-primary/10/40 active:scale-[0.98]"
           >
             {/* Visual preview */}
             <div className="mb-2.5 p-2 bg-gray-50 rounded-lg group-hover:bg-white transition overflow-hidden">
               {section.preview}
             </div>
-            <p className="text-xs font-semibold text-gray-800 group-hover:text-pink-600 transition leading-tight">
+            <p className="text-xs font-semibold text-gray-800 group-hover:text-primary-dark transition leading-tight">
               {section.label}
             </p>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-tight">{section.description}</p>

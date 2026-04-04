@@ -20,7 +20,7 @@ function ResetPasswordForm() {
     return (
       <div className="text-center space-y-4">
         <p className="text-red-500">Invalid or missing reset token.</p>
-        <Link href="/auth/forgot-password" className="text-pink-500 hover:text-pink-600 text-sm">
+        <Link href="/auth/forgot-password" className="text-primary hover:text-primary-dark text-sm">
           Request a new link
         </Link>
       </div>
@@ -73,7 +73,7 @@ function ResetPasswordForm() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           placeholder="Min 8 characters"
           required
         />
@@ -87,7 +87,7 @@ function ResetPasswordForm() {
           type="password"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           placeholder="Repeat your password"
           required
         />
@@ -95,7 +95,7 @@ function ResetPasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-500 transition disabled:bg-gray-400"
+        className="w-full bg-primary-light text-white py-2 rounded-lg hover:bg-primary-dark transition disabled:bg-gray-400"
       >
         {loading ? 'Resetting...' : 'Reset Password'}
       </button>
@@ -105,7 +105,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-300 to-pink-500 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-primary-light to-primary flex items-center justify-center">
       <div className="w-full max-w-md mx-auto p-8">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h2 className="text-2xl font-bold mb-2 text-center">Reset Password</h2>
@@ -114,7 +114,7 @@ export default function ResetPasswordPage() {
             <ResetPasswordForm />
           </Suspense>
           <p className="text-center text-sm text-gray-500 mt-6">
-            <Link href="/auth/login" className="text-pink-500 hover:text-pink-600">
+            <Link href="/auth/login" className="text-primary hover:text-primary-dark">
               ← Back to Sign In
             </Link>
           </p>

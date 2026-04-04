@@ -16,7 +16,6 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
   const router = useRouter();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -55,7 +54,6 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
     status: 'draft' | 'published';
   }) => {
     if (!blog) return;
-    setSaving(true);
     try {
       const res = await api.updateBlog(blog.id, data);
       const updated: Blog = res.data.data.blog;
@@ -63,8 +61,6 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
       router.push(data.status === 'published' ? `/blogs/${updated.slug}` : '/dashboard');
     } catch (err: any) {
       throw new Error(err.response?.data?.error || err.message || 'Failed to save blog');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -74,7 +70,7 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <BlogEditor initialData={blog} onSave={handleSave} saving={saving} />
+      <BlogEditor initialData={blog} onSave={handleSave} />
     </main>
   );
 }

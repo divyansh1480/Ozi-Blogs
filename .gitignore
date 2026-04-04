@@ -36,3 +36,4 @@ frontend/public/uploads/
 *~
 backend/dist/
 .claude/
+.md

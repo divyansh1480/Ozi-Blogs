@@ -45,6 +45,16 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   };
 }
 
+// Strip figcaptions that are empty or contain only template placeholder text
+const PLACEHOLDER_CAPTION_RE = /^(caption|caption for image|caption one|caption two|caption three|add a caption)/i;
+function cleanFigcaptions(html: string): string {
+  return html.replace(/<figcaption([^>]*)>([\s\S]*?)<\/figcaption>/gi, (match, attrs, inner) => {
+    const text = inner.replace(/<[^>]*>/g, '').trim();
+    if (!text || PLACEHOLDER_CAPTION_RE.test(text)) return `<figcaption${attrs}></figcaption>`;
+    return match;
+  });
+}
+
 // Inject ids into headings for anchor links
 function injectHeadingIds(html: string): string {
   let count: Record<string, number> = {};
@@ -65,9 +75,15 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
   if (!blog) notFound();
 
+  // Decode TipTap section sentinels stored in DB back to raw HTML for display
+  const decodedContent = blog.content.replace(
+    /<div data-html-block="([^"]*)"[^>]*><\/div>/g,
+    (_, encoded) => decodeURIComponent(encoded)
+  );
+
   const publishedDate = format(blogDate(blog.publishedAt, blog.createdAt), 'MMMM d, yyyy');
-  const blogReadTime = readTime(blog.content);
-  const contentWithIds = injectHeadingIds(blog.content);
+  const blogReadTime = readTime(decodedContent);
+  const contentWithIds = injectHeadingIds(cleanFigcaptions(decodedContent));
   const initial = authorInitial(blog.author?.displayName, blog.author?.username, 'A');
 
   return (
@@ -76,13 +92,13 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
         {/* Breadcrumb */}
         <nav className="mb-6 flex items-center gap-1.5 text-sm">
-          <Link href="/" className="text-gray-400 hover:text-pink-500 transition">Home</Link>
+          <Link href="/" className="text-gray-400 hover:text-primary transition">Home</Link>
           <span className="text-gray-300">/</span>
-          <Link href="/blogs" className="text-gray-400 hover:text-pink-500 transition">Blogs</Link>
+          <Link href="/blogs" className="text-gray-400 hover:text-primary transition">Blogs</Link>
           <span className="text-gray-300">/</span>
           {blog.author?.username && (
             <>
-              <Link href={`/users/${blog.author.username}`} className="text-gray-400 hover:text-pink-500 transition">
+              <Link href={`/users/${blog.author.username}`} className="text-gray-400 hover:text-primary transition">
                 {blog.author.displayName || blog.author.username}
               </Link>
               <span className="text-gray-300">/</span>
@@ -102,14 +118,14 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
                 {/* Author row */}
                 <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white font-bold text-base shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-light to-purple-500 flex items-center justify-center text-white font-bold text-base shrink-0">
                     {initial}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 flex-wrap">
                       <Link
                         href={`/users/${blog.author?.username || ''}`}
-                        className="font-semibold text-gray-800 hover:text-pink-500 transition"
+                        className="font-semibold text-gray-800 hover:text-primary transition"
                       >
                         {blog.author?.displayName || blog.author?.username || 'Anonymous'}
                       </Link>
@@ -132,9 +148,9 @@ export default async function BlogPage({ params }: BlogPageProps) {
                   className="prose prose-lg max-w-none text-gray-700 leading-relaxed
                     prose-headings:text-gray-900 prose-headings:font-bold
                     prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
-                    prose-a:text-pink-500 prose-a:no-underline hover:prose-a:underline
-                    prose-blockquote:border-l-pink-400 prose-blockquote:text-gray-500
-                    prose-code:text-pink-600 prose-code:bg-pink-50 prose-code:px-1 prose-code:rounded
+                    prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                    prose-blockquote:border-l-primary-light prose-blockquote:text-gray-500
+                    prose-code:text-primary-dark prose-code:bg-primary/10 prose-code:px-1 prose-code:rounded
                     prose-pre:bg-gray-900 prose-pre:text-gray-100
                     prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto
                     prose-hr:border-gray-200"
@@ -142,7 +158,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
                 {/* Footer of article */}
                 <div className="mt-6 pt-6 border-t border-gray-100 flex items-center justify-between">
-                  <Link href="/blogs" className="text-sm text-pink-500 hover:text-pink-600 font-medium">
+                  <Link href="/blogs" className="text-sm text-primary hover:text-primary-dark font-medium">
                     ← Back to all blogs
                   </Link>
                   <div className="text-sm text-gray-400">{blogReadTime} min read</div>
@@ -157,30 +173,6 @@ export default async function BlogPage({ params }: BlogPageProps) {
           <aside className="hidden xl:block w-64 shrink-0">
             <div className="sticky top-24 space-y-5">
 
-              {/* Breadcrumb card */}
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">You are here</p>
-                <ol className="space-y-2">
-                  {[
-                    { label: 'Home', href: '/' },
-                    { label: 'All Blogs', href: '/blogs' },
-                    ...(blog.author?.username ? [{ label: blog.author.displayName || blog.author.username, href: `/users/${blog.author.username}` }] : []),
-                    { label: blog.title, href: null },
-                  ].map((crumb, i, arr) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span className={`mt-0.5 shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold ${i === arr.length - 1 ? 'bg-pink-400 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                        {i + 1}
-                      </span>
-                      {crumb.href ? (
-                        <Link href={crumb.href} className="text-sm text-gray-500 hover:text-pink-500 transition leading-snug">{crumb.label}</Link>
-                      ) : (
-                        <span className="text-sm text-gray-800 font-medium leading-snug line-clamp-2">{crumb.label}</span>
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-
               {/* Hot Topics — Baby Care */}
               <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">🔥 Hot Topics</p>
@@ -193,7 +185,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
                     <Link
                       key={topic}
                       href={`/blogs?search=${encodeURIComponent(topic)}`}
-                      className="text-xs bg-pink-50 text-pink-600 hover:bg-pink-100 px-2.5 py-1 rounded-full transition font-medium"
+                      className="text-xs bg-primary/10 text-primary-dark hover:bg-primary/20 px-2.5 py-1 rounded-full transition font-medium"
                     >
                       {topic}
                     </Link>
@@ -208,7 +200,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
                   <div className="space-y-3">
                     {related.map((b) => (
                       <Link key={b.id} href={`/blogs/${b.slug}`} className="block group">
-                        <p className="text-sm font-medium text-gray-800 group-hover:text-pink-500 transition leading-snug line-clamp-2">
+                        <p className="text-sm font-medium text-gray-800 group-hover:text-primary transition leading-snug line-clamp-2">
                           {b.title}
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
@@ -217,7 +209,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
                       </Link>
                     ))}
                   </div>
-                  <Link href="/blogs" className="mt-4 block text-xs text-center text-pink-500 hover:text-pink-600 font-medium">
+                  <Link href="/blogs" className="mt-4 block text-xs text-center text-primary hover:text-primary-dark font-medium">
                     View all blogs →
                   </Link>
                 </div>

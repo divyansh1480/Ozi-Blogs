@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import { useState, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import BlogCard from '@/components/BlogCard';
 import { api } from '@/lib/api';
 import { BlogWithAuthor } from '@/types/index';
@@ -27,115 +28,79 @@ function BlogsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [blogs, setBlogs] = useState<BlogWithAuthor[]>([]);
-  const [newFromIndex, setNewFromIndex] = useState<number | null>(null);
-  const [nextPage, setNextPage] = useState(1);
-  const [hasMore, setHasMore] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [initialDone, setInitialDone] = useState(false);
-  const [error, setError] = useState('');
+  const [searchInput, setSearchInput] = useState(searchParams.get('topic') ? '' : searchParams.get('search') || '');
   const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
+  const [activeTopic, setActiveTopic] = useState<string | null>(searchParams.get('topic') || null);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const loadingRef = useRef(false);
-  const hasMoreRef = useRef(false);
-  const nextPageRef = useRef(1);
-  const searchRef = useRef(search);
 
-  loadingRef.current = loading || loadingMore;
-  hasMoreRef.current = hasMore;
-  nextPageRef.current = nextPage;
-  searchRef.current = search;
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isError,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['blogs', search],
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await api.getBlogs(pageParam as number, PAGE_SIZE, search || undefined);
+      return res.data.data as { items: BlogWithAuthor[]; totalPages: number; page: number };
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
+    initialPageParam: 1,
+    staleTime: 60 * 1000,
+  });
 
-  const initialLoad = useCallback(async (searchTerm: string) => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await api.getBlogs(1, PAGE_SIZE, searchTerm || undefined);
-      const data = res.data.data;
-      setBlogs(data.items);
-      setNextPage(2);
-      nextPageRef.current = 2;
-      const more = data.totalPages > 1;
-      setHasMore(more);
-      hasMoreRef.current = more;
-    } catch {
-      setError('Failed to load blogs.');
-    } finally {
-      setLoading(false);
-      setInitialDone(true);
-    }
-  }, []);
+  const blogs = data?.pages.flatMap((p) => p.items) ?? [];
+  const initialDone = !isFetching || blogs.length > 0;
 
-  const loadMore = useCallback(async () => {
-    if (loadingRef.current || !hasMoreRef.current) return;
-    loadingRef.current = true;
-    setLoadingMore(true);
-    try {
-      const res = await api.getBlogs(nextPageRef.current, PAGE_SIZE, searchRef.current || undefined);
-      const data = res.data.data;
-      setBlogs(prev => {
-        setNewFromIndex(prev.length);
-        return [...prev, ...data.items];
-      });
-      const fetched = nextPageRef.current;
-      setNextPage(fetched + 1);
-      nextPageRef.current = fetched + 1;
-      const more = fetched < data.totalPages;
-      setHasMore(more);
-      hasMoreRef.current = more;
-    } catch {
-      loadingRef.current = false;
-      setError('Failed to load more blogs.');
-    } finally {
-      setLoadingMore(false);
-    }
-  }, []);
-
-  // Reset on search change
-  useEffect(() => {
-    setBlogs([]);
-    setNewFromIndex(null);
-    setNextPage(1);
-    nextPageRef.current = 1;
-    setHasMore(false);
-    hasMoreRef.current = false;
-    setInitialDone(false);
-    setError('');
-    initialLoad(search);
-  }, [search, initialLoad]);
-
-  // Connect observer after initial load — fires 500px BEFORE sentinel is visible
-  useEffect(() => {
-    if (!initialDone) return;
-
-    observerRef.current?.disconnect();
-    observerRef.current = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !loadingRef.current && hasMoreRef.current) {
-          loadMore();
-        }
-      },
-      { rootMargin: '0px 0px 200px 0px', threshold: 0 }
-    );
-
-    if (sentinelRef.current) observerRef.current.observe(sentinelRef.current);
-    return () => observerRef.current?.disconnect();
-  }, [initialDone, loadMore]);
+  // Wire up infinite scroll sentinel once data is loaded
+  const attachObserver = useCallback(
+    (node: HTMLDivElement | null) => {
+      (sentinelRef as any).current = node;
+      observerRef.current?.disconnect();
+      if (!node) return;
+      observerRef.current = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        },
+        { rootMargin: '0px 0px 200px 0px', threshold: 0 },
+      );
+      observerRef.current.observe(node);
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage],
+  );
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const q = searchInput.trim();
+    setActiveTopic(null);
     setSearch(q);
     if (q) router.replace(`/blogs?search=${encodeURIComponent(q)}`);
     else router.replace('/blogs');
   };
 
-  const handleClear = () => {
+  const handleClearSearch = () => {
     setSearchInput('');
+    setSearch('');
+    router.replace('/blogs');
+  };
+
+  const handleTopicClick = (topic: string) => {
+    setSearchInput('');
+    setActiveTopic(topic);
+    setSearch(topic);
+    router.replace(`/blogs?topic=${encodeURIComponent(topic)}`);
+  };
+
+  const handleClearTopic = () => {
+    setActiveTopic(null);
     setSearch('');
     router.replace('/blogs');
   };
@@ -143,9 +108,9 @@ function BlogsContent() {
   return (
     <main className="min-h-screen bg-gray-50 relative">
       {/* Slim top loading bar for initial load */}
-      {loading && (
-        <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-pink-100">
-          <div className="load-bar h-full bg-pink-400" />
+      {isFetching && !isFetchingNextPage && (
+        <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-primary/20">
+          <div className="load-bar h-full bg-primary-light" />
         </div>
       )}
 
@@ -157,29 +122,69 @@ function BlogsContent() {
             Discover stories and ideas from our community
           </p>
           <form onSubmit={handleSearch} className="flex gap-2 sm:gap-3 max-w-xl">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search blogs..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-            <button type="submit" className="px-5 py-2 bg-pink-400 text-white rounded-lg hover:bg-pink-500 transition font-medium">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search blogs..."
+                className="w-full px-4 py-2 pr-9 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              {searchInput && (
+                <button
+                  type="button"
+                  onClick={handleClearSearch}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition text-lg leading-none"
+                  aria-label="Clear search"
+                >×</button>
+              )}
+            </div>
+            <button type="submit" className="px-5 py-2 bg-primary-light text-white rounded-lg hover:bg-primary-dark transition font-medium">
               Search
             </button>
-            {search && (
-              <button type="button" onClick={handleClear} className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm">
-                Clear
-              </button>
-            )}
           </form>
+
+          {search && !activeTopic && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-sm text-gray-500">Results for <span className="font-medium text-gray-800">"{search}"</span></span>
+              <button type="button" onClick={handleClearSearch} className="text-xs text-primary-dark hover:underline font-medium">← All blogs</button>
+            </div>
+          )}
+
+          {/* Hot Topics */}
+          <div className="mt-4 sm:mt-5">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">🔥 Hot Topics</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                'Newborn Care', 'Breastfeeding', 'Baby Sleep', 'Weaning Foods',
+                'Diaper Rash', 'Baby Milestones', 'Tummy Time', 'Teething Tips',
+                'Baby Vaccines', 'Postpartum', 'Colic Relief', 'Baby Skin Care',
+              ].map(topic => (
+                <button
+                  key={topic}
+                  type="button"
+                  onClick={() => activeTopic === topic ? handleClearTopic() : handleTopicClick(topic)}
+                  className={`text-xs px-2.5 py-1 rounded-full transition font-medium flex items-center gap-1
+                    ${activeTopic === topic
+                      ? 'bg-primary-light text-white shadow-sm'
+                      : 'bg-primary/10 text-primary-dark hover:bg-primary/20'}`}
+                >
+                  {topic}
+                  {activeTopic === topic && <span className="ml-0.5 opacity-80">×</span>}
+                </button>
+              ))}
+            </div>
+            {activeTopic && (
+              <button type="button" onClick={handleClearTopic} className="mt-2 text-xs text-primary-dark hover:underline font-medium">← All blogs</button>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-6 sm:py-10">
-        {search && (
+        {activeTopic && (
           <p className="text-sm text-gray-500 mb-6">
-            Results for <span className="font-medium text-gray-800">"{search}"</span>
+            Showing posts tagged <span className="font-medium text-gray-800">"{activeTopic}"</span>
           </p>
         )}
 
@@ -191,17 +196,17 @@ function BlogsContent() {
         )}
 
         {/* Error */}
-        {initialDone && error && blogs.length === 0 && (
+        {isError && blogs.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-red-500 mb-4">{error}</p>
-            <button onClick={() => initialLoad(search)} className="px-4 py-2 bg-pink-400 text-white rounded-lg hover:bg-pink-500">
+            <p className="text-red-500 mb-4">Failed to load blogs.</p>
+            <button onClick={() => refetch()} className="px-4 py-2 bg-primary-light text-white rounded-lg hover:bg-primary-dark">
               Try Again
             </button>
           </div>
         )}
 
         {/* Empty state */}
-        {initialDone && !error && blogs.length === 0 && (
+        {initialDone && !isError && blogs.length === 0 && (
           <div className="text-center py-20 text-gray-400">
             <p className="text-lg mb-2">No blogs found</p>
             {search && <p className="text-sm">Try a different search term</p>}
@@ -211,20 +216,14 @@ function BlogsContent() {
         {/* Blog grid */}
         {blogs.length > 0 && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogs.map((blog, i) => (
-              <div
-                key={blog.id}
-                className={`h-full${newFromIndex !== null && i >= newFromIndex ? ' blog-card-enter' : ''}`}
-                style={newFromIndex !== null && i >= newFromIndex
-                  ? { animationDelay: `${(i - newFromIndex) * 60}ms` }
-                  : undefined}
-              >
+            {blogs.map((blog) => (
+              <div key={blog.id} className="h-full">
                 <BlogCard blog={blog} />
               </div>
             ))}
 
             {/* Inline skeleton cards while loading next batch */}
-            {loadingMore && Array.from({ length: 3 }).map((_, i) => (
+            {isFetchingNextPage && Array.from({ length: 3 }).map((_, i) => (
               <div key={`skel-${i}`} className="blog-card-enter" style={{ animationDelay: `${i * 60}ms` }}>
                 <SkeletonCard />
               </div>
@@ -232,8 +231,20 @@ function BlogsContent() {
           </div>
         )}
 
-        {/* Sentinel — 500px rootMargin triggers load before user reaches it */}
-        <div ref={sentinelRef} className="mt-6 h-1" />
+        {/* Sentinel — 200px rootMargin triggers load before user reaches it */}
+        <div ref={attachObserver} className="mt-6 h-1" />
+
+        {/* All blogs loaded — back to top */}
+        {initialDone && !hasNextPage && blogs.length > 0 && !isFetchingNextPage && (
+          <div className="flex justify-center py-10">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center gap-2 px-5 py-2 bg-primary-light hover:bg-primary-dark text-white text-sm font-medium rounded-full shadow transition"
+            >
+              ↑ Back to Top
+            </button>
+          </div>
+        )}
       </div>
     </main>
   );

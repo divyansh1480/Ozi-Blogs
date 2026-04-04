@@ -106,7 +106,7 @@ function ResizableImageView({ node, updateAttributes, selected }: NodeViewProps)
                 onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); updateAttributes({ align: a }); }}
                 title={`Align ${a}`}
                 style={{
-                  background: align === a ? '#f472b6' : 'transparent',
+                  background: align === a ? '#C04878' : 'transparent',
                   border: 'none',
                   borderRadius: 4,
                   color: '#fff',
@@ -151,7 +151,7 @@ style={{
           <div style={{
             position: 'absolute',
             inset: 0,
-            border: '2px solid #f472b6',
+            border: '2px solid #C04878',
             borderRadius: 8,
             pointerEvents: 'none',
             zIndex: 10,
@@ -170,7 +170,7 @@ style={{
               width: HANDLE_SIZE,
               height: HANDLE_SIZE,
               background: '#ffffff',
-              border: '2px solid #f472b6',
+              border: '2px solid #C04878',
               borderRadius: 2,
               cursor,
               zIndex: 20,

@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 
 const NAV_SECTIONS = [
   { heading: 'Explore', items: [
-    { label: 'Home',       href: '/',          icon: '🏠' },
+    // { label: 'Home', href: '/', icon: '🏠' },  // re-enable when home page is restored
     { label: 'All Blogs',  href: '/blogs',     icon: '📰' },
   ]},
   { heading: 'My Space', authOnly: true, items: [
@@ -53,13 +53,13 @@ export default function AppSidebar() {
                       onClick={close}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition mb-0.5 ${
                         active
-                          ? 'bg-pink-50 text-pink-600'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-pink-500'
+                          ? 'bg-primary/10 text-primary-dark'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-primary'
                       }`}
                     >
                       <span className="text-base w-5 text-center">{item.icon}</span>
                       {item.label}
-                      {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-pink-400" />}
+                      {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-light" />}
                     </Link>
                   );
                 })}

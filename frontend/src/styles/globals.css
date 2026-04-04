@@ -2,6 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── New Kansas: self-hosted custom font ── */
+@font-face {
+  font-family: 'New Kansas';
+  src: url('/fonts/NewKansas/NewKansas-Thin.woff2') format('woff2'),
+       url('/fonts/NewKansas/NewKansas-Thin.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Kansas';
+  src: url('/fonts/NewKansas/NewKansas-Regular.woff2') format('woff2'),
+       url('/fonts/NewKansas/NewKansas-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Kansas';
+  src: url('/fonts/NewKansas/NewKansas-Medium.woff2') format('woff2'),
+       url('/fonts/NewKansas/NewKansas-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Kansas';
+  src: url('/fonts/NewKansas/NewKansas-SemiBold.woff2') format('woff2'),
+       url('/fonts/NewKansas/NewKansas-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Kansas';
+  src: url('/fonts/NewKansas/NewKansas-Bold.woff2') format('woff2'),
+       url('/fonts/NewKansas/NewKansas-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Kansas';
+  src: url('/fonts/NewKansas/NewKansas-Heavy.woff2') format('woff2'),
+       url('/fonts/NewKansas/NewKansas-Heavy.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Space-separated HSL values — required for Tailwind opacity modifiers (bg-primary/10) */
+  --primary:       340 50% 45%;   /* #AC2660 */
+  --primary-light: 340 45% 55%;   /* #C04878 */
+  --primary-dark:  340 55% 35%;   /* #8A1748 */
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -15,21 +72,20 @@ html {
 body {
   background-color: #f9fafb;
   color: #1f2937;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-nunito), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  zoom:0.8;
 }
 
 a {
-  color: #f472b6;
+  color: hsl(var(--primary-light));
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #ec4899;
+  color: hsl(var(--primary));
 }
 
 button {
@@ -44,15 +100,117 @@ select {
   font-family: inherit;
 }
 
+/* ── Kansas heading utility ── */
+.font-kansas {
+  font-family: 'New Kansas', serif;
+}
+
 /* Section block edit area — force caret and text selection visible */
 .section-edit-area {
   caret-color: #111827 !important;
   -webkit-user-select: text !important;
   user-select: text !important;
-  cursor: text;
+  cursor: text !important;
+  /* Force editing capability even inside contenteditable="false" parents */
+  -webkit-user-modify: read-write !important;
+}
+.section-edit-area *,
+.section-edit-area p,
+.section-edit-area h1,
+.section-edit-area h2,
+.section-edit-area h3,
+.section-edit-area h4,
+.section-edit-area span,
+.section-edit-area div {
+  cursor: text !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
 }
 .section-edit-area img {
   cursor: pointer !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+/* Ensure ProseMirror-hideselection class doesn't kill our caret */
+.ProseMirror-hideselection .section-edit-area {
+  caret-color: #111827 !important;
+}
+
+/* ── Section edit spacing ───────────────────────────────────────────────────
+   The JS normalizer in HtmlBlockView handles the initial template HTML by
+   stamping inline styles directly, which always beat UA rules.
+   This CSS rule handles NEW elements typed by the user during editing
+   (specificity 111 beats UA [contenteditable] p specificity 101).        ── */
+.section-edit-area[contenteditable] p,
+.section-edit-area[contenteditable] h1,
+.section-edit-area[contenteditable] h2,
+.section-edit-area[contenteditable] h3,
+.section-edit-area[contenteditable] h4,
+.section-edit-area[contenteditable] h5,
+.section-edit-area[contenteditable] h6,
+.section-edit-area[contenteditable] blockquote,
+.section-edit-area[contenteditable] pre {
+  margin: 0;
+  padding: 0;
+}
+/* Lists: UA adds padding-inline-start:40px inside contenteditable */
+.section-edit-area[contenteditable] ul,
+.section-edit-area[contenteditable] ol {
+  padding-inline-start: 0;
+  margin: 0;
+}
+.section-edit-area > *:first-child { margin-top: 0 !important; }
+.section-edit-area > *:last-child  { margin-bottom: 0 !important; }
+
+/* ── Lists: preserve font size/family inside section editor (Issue 5) ── */
+.section-edit-area ul,
+.section-edit-area ol,
+.section-edit-area li,
+.section-block-view ul,
+.section-block-view ol,
+.section-block-view li {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* ── Figcaptions: show placeholder in edit mode, hide when empty in preview ── */
+.section-edit-area figcaption:empty::before {
+  content: 'Caption (leave empty to hide in preview)';
+  color: #9ca3af;
+  font-style: italic;
+  font-size: 0.78rem;
+  pointer-events: none;
+}
+/* Hide empty figcaptions in view mode and in published blog post */
+.section-block-view figcaption:empty,
+.prose figcaption:empty {
+  display: none !important;
+}
+
+/* ── Section drag states ────────────────────────────────────────────────── */
+
+/* The section being dragged — lifted with primary color ring */
+.section-is-dragging {
+  border-color: hsl(var(--primary-light)) !important;
+  outline: 2px solid hsl(var(--primary-light) / 0.5);
+  outline-offset: 2px;
+  background: #fff;
+}
+
+/* All other sections during a drag — collapsed to thin bars, content hidden by overlay */
+.section-drag-dimmed {
+  position: relative;
+}
+.section-drag-dimmed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Fully opaque — sections are thin bars, no content visible during drag */
+  background: hsl(340deg 45% 72%);
+  border-radius: 0.75rem;
+  z-index: 20;
+  pointer-events: none;
+  transition: background 0.12s ease;
 }
 
 /* Section block images — always block, scale from center on hover */
@@ -93,7 +251,7 @@ select {
 }
 
 .btn {
-  @apply px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-500 transition-colors;
+  @apply px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors;
 }
 
 .btn-secondary {
@@ -101,11 +259,11 @@ select {
 }
 
 .btn-outline {
-  @apply px-4 py-2 border-2 border-pink-500 text-pink-500 rounded-lg hover:bg-pink-50 transition-colors;
+  @apply px-4 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors;
 }
 
 .input-field {
-  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500;
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary;
 }
 
 .card {

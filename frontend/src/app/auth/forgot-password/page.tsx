@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-300 to-pink-500 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-primary-light to-primary flex items-center justify-center">
       <div className="w-full max-w-md mx-auto p-8">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h2 className="text-2xl font-bold mb-2 text-center">Forgot Password</h2>
@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="your@email.com"
                   required
                 />
@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-500 transition disabled:bg-gray-400"
+                className="w-full bg-primary-light text-white py-2 rounded-lg hover:bg-primary-dark transition disabled:bg-gray-400"
               >
                 {loading ? 'Generating link...' : 'Send Reset Link'}
               </button>
@@ -77,13 +77,13 @@ export default function ForgotPasswordPage() {
               </p>
 
               {resetUrl && (
-                <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 text-left">
-                  <p className="text-xs text-pink-600 font-medium mb-2">
+                <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 text-left">
+                  <p className="text-xs text-primary-dark font-medium mb-2">
                     Dev mode — link (would be emailed in production):
                   </p>
                   <Link
                     href={resetUrl}
-                    className="text-xs text-pink-500 break-all underline"
+                    className="text-xs text-primary break-all underline"
                   >
                     {resetUrl}
                   </Link>
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
           )}
 
           <p className="text-center text-sm text-gray-500 mt-6">
-            <Link href="/auth/login" className="text-pink-500 hover:text-pink-600">
+            <Link href="/auth/login" className="text-primary hover:text-primary-dark">
               ← Back to Sign In
             </Link>
           </p>

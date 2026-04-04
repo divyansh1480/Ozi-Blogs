@@ -18,7 +18,7 @@ export default function CollapsibleTOC({ headings }: { headings: Heading[] }) {
       <button
         onClick={() => setOpen((v) => !v)}
         title={open ? 'Collapse contents' : 'Expand contents'}
-        className="mb-3 flex items-center gap-2 text-xs text-gray-400 hover:text-pink-500 transition select-none"
+        className="mb-3 flex items-center gap-2 text-xs text-gray-400 hover:text-primary transition select-none"
       >
         {/* 3-stripe icon */}
         <span className="flex flex-col gap-[4px]">
@@ -38,7 +38,7 @@ export default function CollapsibleTOC({ headings }: { headings: Heading[] }) {
               <a
                 key={i}
                 href={`#${h.id}`}
-                className={`block text-sm text-gray-500 hover:text-pink-500 transition leading-snug truncate ${
+                className={`block text-sm text-gray-500 hover:text-primary transition leading-snug truncate ${
                   h.level === 1 ? 'font-medium' : h.level === 2 ? 'pl-3' : 'pl-6 text-xs'
                 }`}
               >
@@ -52,7 +52,7 @@ export default function CollapsibleTOC({ headings }: { headings: Heading[] }) {
       {/* Back link always visible */}
       <Link
         href="/blogs"
-        className="mt-4 flex items-center gap-1 text-sm text-gray-400 hover:text-pink-500 transition"
+        className="mt-4 flex items-center gap-1 text-sm text-gray-400 hover:text-primary transition"
       >
         ← All blogs
       </Link>

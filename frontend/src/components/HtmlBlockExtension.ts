@@ -12,6 +12,9 @@ export const HtmlBlock = Node.create({
   addAttributes() {
     return {
       html: { default: '' },
+      // Transient flag: true when inserted from sections panel → auto-opens edit mode.
+      // Never serialized to HTML (renderHTML only outputs `html`).
+      autoEdit: { default: false },
     };
   },
 

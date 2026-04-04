@@ -35,7 +35,7 @@ export default function Pagination({ page, totalPages, onPageChange, disabled }:
               disabled={disabled}
               className={`w-9 h-9 rounded-lg text-sm font-medium transition disabled:opacity-40 disabled:cursor-not-allowed ${
                 p === page
-                  ? 'bg-pink-500 text-white'
+                  ? 'bg-primary/100 text-white'
                   : 'border border-gray-300 hover:bg-gray-50'
               }`}
             >

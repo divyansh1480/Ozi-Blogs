@@ -153,7 +153,7 @@ export default function CommentsSection({ blogId, isOpen, onClose, onCountChange
           {isAuthenticated ? (
             <form onSubmit={handleSubmit} className="mb-6">
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white font-bold text-sm shrink-0 mt-1">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-light to-purple-500 flex items-center justify-center text-white font-bold text-sm shrink-0 mt-1">
                   {authorInitial(user?.displayName, user?.username)}
                 </div>
                 <div className="flex-1">
@@ -162,13 +162,13 @@ export default function CommentsSection({ blogId, isOpen, onClose, onCountChange
                     onChange={e => setText(e.target.value)}
                     placeholder="Share your thoughts..."
                     rows={3}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light resize-none"
                   />
                   <div className="flex justify-end mt-2">
                     <button
                       type="submit"
                       disabled={submitting || !text.trim()}
-                      className="bg-pink-400 hover:bg-pink-500 text-white text-sm font-medium px-5 py-2 rounded-lg transition disabled:opacity-50"
+                      className="bg-primary-light hover:bg-primary-dark text-white text-sm font-medium px-5 py-2 rounded-lg transition disabled:opacity-50"
                     >
                       {submitting ? 'Posting...' : 'Post'}
                     </button>
@@ -177,7 +177,7 @@ export default function CommentsSection({ blogId, isOpen, onClose, onCountChange
               </div>
             </form>
           ) : (
-            <div className="mb-6 bg-pink-50 border border-pink-100 rounded-xl px-5 py-4 text-sm text-pink-600">
+            <div className="mb-6 bg-primary/10 border border-primary/20 rounded-xl px-5 py-4 text-sm text-primary-dark">
               <a href="/auth/login" className="font-semibold hover:underline">Sign in</a> to leave a comment.
             </div>
           )}
@@ -215,7 +215,7 @@ export default function CommentsSection({ blogId, isOpen, onClose, onCountChange
                       {isAuthenticated && (
                         <button
                           onClick={() => setReplyingTo(replyingTo?.id === c.id ? null : { id: c.id, name: c.author?.displayName || c.author?.username || '' })}
-                          className="mt-1 text-xs text-gray-400 hover:text-pink-500 transition"
+                          className="mt-1 text-xs text-gray-400 hover:text-primary transition"
                         >
                           {replyingTo?.id === c.id ? 'Cancel' : 'Reply'}
                         </button>
@@ -232,13 +232,13 @@ export default function CommentsSection({ blogId, isOpen, onClose, onCountChange
                         placeholder={`Reply to ${replyingTo.name}...`}
                         rows={2}
                         autoFocus
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"
+                        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light resize-none"
                       />
                       <div className="flex justify-end mt-2">
                         <button
                           type="submit"
                           disabled={submitting || !replyText.trim()}
-                          className="bg-pink-400 hover:bg-pink-500 text-white text-xs font-medium px-4 py-1.5 rounded-lg transition disabled:opacity-50"
+                          className="bg-primary-light hover:bg-primary-dark text-white text-xs font-medium px-4 py-1.5 rounded-lg transition disabled:opacity-50"
                         >
                           {submitting ? '...' : 'Reply'}
                         </button>
@@ -251,7 +251,7 @@ export default function CommentsSection({ blogId, isOpen, onClose, onCountChange
                     <div className="mt-3 ml-11 space-y-3 border-l-2 border-gray-100 pl-4">
                       {c.replies!.map(r => (
                         <div key={r.id} className="flex gap-2">
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-pink-300 to-purple-400 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">
+                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary-light to-purple-400 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">
                             {authorInitial(r.author?.displayName, r.author?.username)}
                           </div>
                           <div className="flex-1 min-w-0">

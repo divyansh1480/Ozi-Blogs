@@ -76,9 +76,11 @@ export const api = {
     apiClient.get('/blogs/user/me', { params: { page, limit } }),
   getUserBlogs: (userId: string) => apiClient.get(`/blogs/user/${userId}`),
 
-  // Users (to be implemented)
+  // Users
   getUserProfile: (username: string) => apiClient.get(`/users/${username}`),
   getUserPublishedBlogs: (userId: string) => apiClient.get(`/users/${userId}/blogs`),
+  updateProfile: (data: { displayName?: string; bio?: string; avatar?: string }) =>
+    apiClient.put('/users/me', data),
 
   // Likes
   getLikeStatus: (blogId: string) => apiClient.get(`/blogs/${blogId}/likes`),

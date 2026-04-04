@@ -14,6 +14,7 @@ export async function getUserByUsername(username: string): Promise<User | null> 
       email: user.email,
       displayName: user.displayName,
       bio: user.bio,
+      avatar: user.avatar,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -24,7 +25,7 @@ export async function getUserByUsername(username: string): Promise<User | null> 
 
 export async function updateUserProfile(
   userId: string,
-  data: { displayName?: string; bio?: string },
+  data: { displayName?: string; bio?: string; avatar?: string },
 ): Promise<User> {
   const pool = getPool();
   const conn = await pool.getConnection();
@@ -34,6 +35,7 @@ export async function updateUserProfile(
 
     if (data.displayName !== undefined) { updates.push('displayName = ?'); values.push(data.displayName); }
     if (data.bio !== undefined) { updates.push('bio = ?'); values.push(data.bio); }
+    if (data.avatar !== undefined) { updates.push('avatar = ?'); values.push(data.avatar); }
 
     if (updates.length > 0) {
       values.push(userId);
@@ -48,6 +50,7 @@ export async function updateUserProfile(
       email: user.email,
       displayName: user.displayName,
       bio: user.bio,
+      avatar: user.avatar,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

@@ -53,7 +53,7 @@ export default function FollowButton({ userId, initialFollowers = 0, showFollowe
         className={`text-xs font-medium px-3 py-1 rounded-full transition border ${
           following
             ? 'border-gray-300 text-gray-500 hover:border-red-300 hover:text-red-500'
-            : 'border-pink-400 text-pink-500 hover:bg-pink-400 hover:text-white'
+            : 'border-primary-light text-primary hover:bg-primary-light hover:text-white'
         } disabled:opacity-60`}
       >
         {loading ? '...' : following ? 'Following' : '+ Follow'}
@@ -69,7 +69,7 @@ export default function FollowButton({ userId, initialFollowers = 0, showFollowe
         className={`text-sm font-medium px-5 py-2 rounded-full transition border ${
           following
             ? 'border-gray-300 text-gray-600 hover:border-red-300 hover:text-red-500 hover:bg-red-50'
-            : 'border-pink-400 bg-pink-400 text-white hover:bg-pink-500'
+            : 'border-primary-light bg-primary-light text-white hover:bg-primary-dark'
         } disabled:opacity-60`}
       >
         {loading ? '...' : following ? 'Following' : '+ Follow'}

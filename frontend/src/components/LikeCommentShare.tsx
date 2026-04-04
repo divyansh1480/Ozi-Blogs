@@ -68,7 +68,7 @@ export default function LikeCommentShare({ blogId, blogTitle, initialLikes = 0, 
         onClick={toggleLike}
         disabled={loading}
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition ${
-          liked ? 'text-pink-500' : 'text-gray-400 hover:text-pink-500'
+          liked ? 'text-primary' : 'text-gray-400 hover:text-primary'
         } disabled:opacity-50`}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill={liked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">

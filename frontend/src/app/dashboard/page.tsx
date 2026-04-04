@@ -10,39 +10,35 @@ import { api } from '@/lib/api';
 import { Blog, PaginatedResponse } from '@/types/index';
 import { formatDistanceToNow } from 'date-fns';
 import ImportBlogsModal from '@/components/ImportBlogsModal';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function DashboardPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [showImport, setShowImport] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) router.push('/auth/login');
   }, [isLoading, isAuthenticated, router]);
 
-  const fetchMyBlogs = async () => {
-    try {
+  const { data: blogs = [], isLoading: loading, refetch: fetchMyBlogs } = useQuery({
+    queryKey: ['my-blogs', user?.id],
+    queryFn: async () => {
       const res = await api.getMyBlogs();
-      setBlogs((res.data.data as PaginatedResponse<Blog>).items);
-    } catch {
-      // silently fail
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    fetchMyBlogs();
-  }, [isAuthenticated, user]);
+      return (res.data.data as PaginatedResponse<Blog>).items;
+    },
+    enabled: isAuthenticated && !isLoading,
+    staleTime: 30 * 1000,
+  });
 
   const handleDelete = async (blogId: string) => {
     if (!confirm('Delete this blog?')) return;
     try {
       await api.deleteBlog(blogId);
-      setBlogs((prev) => prev.filter((b) => b.id !== blogId));
+      queryClient.setQueryData<Blog[]>(['my-blogs', user?.id], (prev) =>
+        prev ? prev.filter((b) => b.id !== blogId) : [],
+      );
     } catch {
       alert('Failed to delete blog');
     }
@@ -52,7 +48,10 @@ export default function DashboardPage() {
     const newStatus = blog.status === 'published' ? 'draft' : 'published';
     try {
       const res = await api.updateBlog(blog.id, { status: newStatus });
-      setBlogs((prev) => prev.map((b) => (b.id === blog.id ? res.data.data.blog : b)));
+      const updated: Blog = res.data.data.blog;
+      queryClient.setQueryData<Blog[]>(['my-blogs', user?.id], (prev) =>
+        prev ? prev.map((b) => (b.id === blog.id ? updated : b)) : [],
+      );
     } catch {
       alert('Failed to update blog status');
     }
@@ -83,7 +82,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setShowImport(true)}
-              className="border border-gray-200 text-gray-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 hover:border-pink-300 hover:text-pink-500 transition text-xs sm:text-sm font-medium flex items-center gap-1.5"
+              className="border border-gray-200 text-gray-600 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-50 hover:border-primary/50 hover:text-primary transition text-xs sm:text-sm font-medium flex items-center gap-1.5"
             >
               <span>📥</span>
               <span className="hidden sm:inline">Import Excel</span>
@@ -91,7 +90,7 @@ export default function DashboardPage() {
             </button>
             <Link
               href="/blogs/new"
-              className="bg-pink-400 text-white px-3 sm:px-5 py-2 rounded-lg hover:bg-pink-500 transition font-medium text-xs sm:text-sm whitespace-nowrap"
+              className="bg-primary-light text-white px-3 sm:px-5 py-2 rounded-lg hover:bg-primary-dark transition-colors font-medium text-xs sm:text-sm whitespace-nowrap"
             >
               + New Blog
             </Link>
@@ -106,7 +105,7 @@ export default function DashboardPage() {
             { label: 'Drafts', value: drafts.length },
           ].map((stat) => (
             <div key={stat.label} className="bg-white rounded-xl border border-gray-100 p-3 sm:p-6 text-center shadow-sm">
-              <p className="text-2xl sm:text-3xl font-bold text-pink-500">{stat.value}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-primary">{stat.value}</p>
               <p className="text-gray-500 text-xs sm:text-sm mt-1">{stat.label}</p>
             </div>
           ))}
@@ -123,7 +122,7 @@ export default function DashboardPage() {
           ) : blogs.length === 0 ? (
             <div className="p-10 text-center text-gray-400">
               <p className="text-lg mb-2">No blogs yet</p>
-              <Link href="/blogs/new" className="text-pink-500 hover:text-pink-600">
+              <Link href="/blogs/new" className="text-primary hover:text-primary-dark">
                 Write your first blog →
               </Link>
             </div>
@@ -153,7 +152,7 @@ export default function DashboardPage() {
                     )}
                     <Link
                       href={`/blogs/${blog.slug}/edit`}
-                      className="text-xs px-3 py-1.5 border border-pink-200 text-pink-500 rounded-lg hover:bg-pink-50 transition"
+                      className="text-xs px-3 py-1.5 border border-primary/30 text-primary rounded-lg hover:bg-primary/10 transition"
                     >
                       Edit
                     </Link>

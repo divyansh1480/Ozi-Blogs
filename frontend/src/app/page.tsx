@@ -1,19 +1,28 @@
+import { redirect } from 'next/navigation';
+
+export default function Home() {
+  redirect('/blogs');
+}
+
+/* ── HOME PAGE COMMENTED OUT — re-enable by removing the redirect above
+   and uncommenting everything below ────────────────────────────────────
+
 import Link from 'next/link';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
 
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-pink-50 via-white to-pink-100 min-h-[88vh] flex items-center">
+      {/* Hero *\/}
+      <section className="bg-gradient-to-br from-primary/10 via-white to-primary/20 min-h-[88vh] flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block bg-pink-100 text-pink-600 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-5 sm:mb-6 tracking-wide">
+            <span className="inline-block bg-primary/20 text-primary-dark text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-5 sm:mb-6 tracking-wide">
               A place for ideas
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-5 sm:mb-6">
               Write, share &{' '}
-              <span className="text-pink-500">inspire</span>
+              <span className="text-primary">inspire</span>
             </h1>
             <p className="text-base sm:text-xl text-gray-500 mb-8 sm:mb-10 leading-relaxed max-w-xl mx-auto px-2 sm:px-0">
               Ozi BLogs is where great writing happens. Share your stories, discover ideas, and connect with readers around the world.
@@ -21,13 +30,13 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
               <Link
                 href="/auth/register"
-                className="bg-pink-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-pink-600 transition shadow-md shadow-pink-200"
+                className="bg-primary/100 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-primary-dark transition shadow-md shadow-primary/30"
               >
                 Start writing for free
               </Link>
               <Link
                 href="/blogs"
-                className="bg-white text-gray-700 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base border border-gray-200 hover:border-pink-300 hover:text-pink-500 transition"
+                className="bg-white text-gray-700 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base border border-gray-200 hover:border-primary/50 hover:text-primary transition"
               >
                 Explore blogs →
               </Link>
@@ -36,7 +45,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Features *\/}
       <section className="py-14 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10 sm:mb-16">
@@ -53,9 +62,9 @@ export default function Home() {
               { icon: '🔒', title: 'Draft & Publish', desc: "Save privately as a draft, polish it up, and publish whenever you're ready." },
               { icon: '⚡', title: 'Fast & Minimal', desc: 'No clutter, no noise — just you, your words, and your readers.' },
             ].map((f) => (
-              <div key={f.title} className="bg-gray-50 rounded-2xl p-5 sm:p-8 hover:shadow-md hover:bg-pink-50 transition group">
+              <div key={f.title} className="bg-gray-50 rounded-2xl p-5 sm:p-8 hover:shadow-md hover:bg-primary/10 transition group">
                 <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{f.icon}</div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-pink-600 transition">{f.title}</h3>
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-primary-dark transition">{f.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
               </div>
             ))}
@@ -63,23 +72,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-gradient-to-r from-pink-500 to-pink-400 py-14 sm:py-24">
+      {/* CTA *\/}
+      <section className="bg-gradient-to-r from-primary/100 to-primary-light py-14 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">Ready to share your story?</h2>
-          <p className="text-pink-100 text-sm sm:text-lg mb-8 sm:mb-10 max-w-xl mx-auto">
+          <p className="text-white text-sm sm:text-lg mb-8 sm:mb-10 max-w-xl mx-auto">
             Join thousands of writers who use Ozi BLogs to publish their ideas.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
             <Link
               href="/auth/register"
-              className="bg-white text-pink-500 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-gray-50 transition shadow-lg"
+              className="bg-white text-primary px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-gray-50 transition shadow-lg"
             >
               Create your account
             </Link>
             <Link
               href="/auth/login"
-              className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-white hover:text-pink-500 transition"
+              className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base hover:bg-white hover:text-primary transition"
             >
               Sign in
             </Link>
@@ -87,7 +96,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer *\/}
       <footer className="bg-gray-900 py-8 sm:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
           <span className="text-white font-bold text-xl">Ozi BLogs</span>
@@ -103,3 +112,4 @@ export default function Home() {
     </main>
   );
 }
+─────────────────────────────────────────────────────────────────────────── */

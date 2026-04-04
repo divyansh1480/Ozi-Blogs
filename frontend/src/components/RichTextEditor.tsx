@@ -37,6 +37,7 @@ interface RichTextEditorProps {
   onChange: (html: string) => void;
   placeholder?: string;
   onReady?: (insertFn: (html: string) => void) => void;
+  onInsertAtReady?: (insertAtFn: (pos: number, html: string) => void) => void;
 }
 
 const FONT_FAMILIES = [
@@ -59,7 +60,7 @@ const HIGHLIGHT_COLORS = [
   '#FEF08A', '#BBF7D0', '#BFDBFE', '#F5D0FE', '#FED7AA', '#FECACA',
 ];
 
-export default function RichTextEditor({ content, onChange, placeholder, onReady }: RichTextEditorProps) {
+export default function RichTextEditor({ content, onChange, placeholder, onReady, onInsertAtReady }: RichTextEditorProps) {
   const imageFileRef = useRef<HTMLInputElement>(null);
   const [showImageUrl, setShowImageUrl] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
@@ -82,13 +83,9 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
     ],
     content,
     onUpdate: ({ editor }) => {
-      // Decode htmlBlock sentinels back to raw HTML before saving
-      const raw = editor.getHTML();
-      const clean = raw.replace(
-        /<div data-html-block="([^"]*)"[^>]*><\/div>/g,
-        (_, encoded) => decodeURIComponent(encoded)
-      );
-      onChange(clean);
+      // Pass TipTap's raw HTML (sentinels intact) so BlogEditor can remount
+      // the editor correctly. Decoding happens at preview/save time.
+      onChange(editor.getHTML());
     },
     editorProps: {
       attributes: {
@@ -98,15 +95,24 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
   });
 
   useEffect(() => {
-    if (editor && onReady) {
+    if (!editor) return;
+    if (onReady) {
       onReady((html: string) => {
         editor.chain().focus().insertContent({
           type: 'htmlBlock',
-          attrs: { html },
+          attrs: { html, autoEdit: true },
         }).run();
       });
     }
-  }, [editor]);
+    if (onInsertAtReady) {
+      onInsertAtReady((pos: number, html: string) => {
+        editor.chain().focus().insertContentAt(pos, {
+          type: 'htmlBlock',
+          attrs: { html, autoEdit: true },
+        }).run();
+      });
+    }
+  }, [editor]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!editor) return null;
 

@@ -53,10 +53,20 @@ export async function createTables() {
         passwordHash VARCHAR(255) NOT NULL,
         displayName VARCHAR(255),
         bio TEXT,
+        avatar VARCHAR(500),
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
+    // Add avatar column to existing tables if missing
+    const [avatarCols] = await connection.execute(
+      `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users'
+       AND COLUMN_NAME = 'avatar'`,
+    );
+    if ((avatarCols as any[]).length === 0) {
+      await connection.execute(`ALTER TABLE users ADD COLUMN avatar VARCHAR(500)`);
+    }
 
     // Blogs table
     await connection.execute(`

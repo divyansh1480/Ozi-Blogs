@@ -1,15 +1,118 @@
+// 'use client';
+
+// import { useState } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { useAuth } from '@/context/AuthContext';
+// import Link from 'next/link';
+
+// export default function LoginForm() {
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [error, setError] = useState('');
+//   const [loading, setLoading] = useState(false);
+//   const { login } = useAuth();
+//   const router = useRouter();
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     setError('');
+//     setLoading(true);
+
+//     try {
+//       await login(email, password);
+//       router.push('/dashboard');
+//     } catch (err: any) {
+//       setError(err.message || 'Failed to login');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="w-full max-w-md mx-auto p-8">
+//       <div className="bg-white rounded-lg shadow-lg p-8">
+//         <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
+
+//         {error && (
+//           <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+//             {error}
+//           </div>
+//         )}
+
+//         <form onSubmit={handleSubmit} className="space-y-4">
+//           <div>
+//             <label htmlFor="email" className="block text-sm font-medium mb-2">
+//               Email
+//             </label>
+//             <input
+//               id="email"
+//               type="email"
+//               value={email}
+//               onChange={(e) => setEmail(e.target.value)}
+//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+//               placeholder="your@email.com"
+//               required
+//             />
+//           </div>
+
+//           <div>
+//             <div className="flex items-center justify-between mb-2">
+//               <label htmlFor="password" className="block text-sm font-medium">
+//                 Password
+//               </label>
+//               <Link href="/auth/forgot-password" className="text-xs text-primary hover:text-primary-dark">
+//                 Forgot password?
+//               </Link>
+//             </div>
+//             <input
+//               id="password"
+//               type="password"
+//               value={password}
+//               onChange={(e) => setPassword(e.target.value)}
+//               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+//               placeholder="••••••••"
+//               required
+//             />
+//           </div>
+
+//           <button
+//             type="submit"
+//             disabled={loading}
+//             className="w-full bg-primary-light text-white py-2 rounded-lg hover:bg-primary-dark transition disabled:bg-gray-400"
+//           >
+//             {loading ? 'Signing in...' : 'Sign In'}
+//           </button>
+//         </form>
+
+//         <p className="text-center text-sm text-gray-600 mt-6">
+//           Don't have an account?{' '}
+//           <Link href="/auth/register" className="text-primary hover:text-primary">
+//             Sign up
+//           </Link>
+//         </p>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
   const { login } = useAuth();
   const router = useRouter();
 
@@ -29,17 +132,44 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-8">
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
+    <div className="relative w-full max-w-md mx-auto">
 
+      {/* 🐱 CAT (TOP LEFT BEHIND FORM) */}
+      <Image
+        src="/uploads/cat.svg"
+        alt="Cat"
+        width={180}
+        height={180}
+        className="absolute -top-2 -left-16 z-0 hidden md:block rotate-[-10deg] drop-shadow-xl"
+      />
+
+      {/* 🌸 FLOWER (BOTTOM RIGHT BEHIND FORM) */}
+      <Image
+        src="/uploads/flower.svg"
+        alt="Flower"
+        width={180}
+        height={180}
+        className="absolute -bottom-12 -right-24 z-0 hidden md:block rotate-[10deg] drop-shadow-xl"
+      />
+
+      {/* FORM CARD */}
+      <div className="mt-20 relative z-10 bg-white rounded-lg shadow-lg p-8">
+
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Sign In
+        </h2>
+
+        {/* ERROR */}
         {error && (
           <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
             {error}
           </div>
         )}
 
+        {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* EMAIL */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-2">
               Email
@@ -49,47 +179,56 @@ export default function LoginForm() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="your@email.com"
               required
             />
           </div>
 
+          {/* PASSWORD */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <label htmlFor="password" className="block text-sm font-medium">
                 Password
               </label>
-              <Link href="/auth/forgot-password" className="text-xs text-pink-500 hover:text-pink-600">
+
+              <Link
+                href="/auth/forgot-password"
+                className="text-xs text-primary hover:text-primary-dark"
+              >
                 Forgot password?
               </Link>
             </div>
+
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="••••••••"
               required
             />
           </div>
 
+          {/* BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-500 transition disabled:bg-gray-400"
+            className="w-full bg-primary-light text-white py-2 rounded-lg hover:bg-primary-dark transition disabled:bg-gray-400"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
+        {/* FOOTER */}
         <p className="text-center text-sm text-gray-600 mt-6">
           Don't have an account?{' '}
-          <Link href="/auth/register" className="text-pink-500 hover:text-pink-500">
+          <Link href="/auth/register" className="text-primary hover:text-primary">
             Sign up
           </Link>
         </p>
+
       </div>
     </div>
   );
