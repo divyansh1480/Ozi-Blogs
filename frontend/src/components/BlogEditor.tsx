@@ -141,6 +141,7 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
     setExcerpt(pendingDraft.excerpt);
     setContent(pendingDraft.content);
     setEditorKey(k => k + 1);
+    if (!started) setStarted(true); // ensure visible editor shows restored content
     setPendingDraft(null);
   };
 
