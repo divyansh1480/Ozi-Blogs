@@ -6,6 +6,8 @@
     "start": "cd backend && npm start"
   },
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=18",
+    "npm": ">=9"
+  },
+  "packageManager": "npm@10.0.0"
 }
