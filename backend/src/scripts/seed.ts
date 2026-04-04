@@ -1,5 +1,5 @@
 /**
- * Seed script — creates a demo user + 25 sample published blogs
+ * Seed script — creates a demo user + 50 sample published blogs
  * Run: npx ts-node src/scripts/seed.ts
  */
 import 'dotenv/config';
@@ -19,7 +19,7 @@ const SAMPLE_BLOGS: { title: string; excerpt: string; content: string }[] = [
   {
     title: 'The First 6 Months: What No One Tells You',
     excerpt: 'Honest reflections on the newborn phase — the beautiful chaos, the sleepless nights, and the unexpected joys.',
-    content: '<h2>Brace Yourself</h2><p>The first six months of parenthood are unlike anything you have experienced. Time moves both incredibly fast and agonizingly slow at the same time.</p><p>You will question everything — your choices, your instincts, your sleep-deprived math. And yet, at 3 AM when your baby finally yawns and blinks at you, nothing else in the world matters.</p><h3>The Sleep Thing</h3><p>Everyone warns you about the sleep deprivation. What they don't tell you is that your brain adapts. You will function on 4-hour stretches and feel oddly proud of it.</p>',
+    content: '<h2>Brace Yourself</h2><p>The first six months of parenthood are unlike anything you have experienced. Time moves both incredibly fast and agonizingly slow at the same time.</p><p>You will question everything — your choices, your instincts, your sleep-deprived math. And yet, at 3 AM when your baby finally yawns and blinks at you, nothing else in the world matters.</p><h3>The Sleep Thing</h3><p>Everyone warns you about the sleep deprivation. What they don\'t tell you is that your brain adapts. You will function on 4-hour stretches and feel oddly proud of it.</p>',
   },
   {
     title: 'Baby-Led Weaning: Our Experience at 6 Months',
