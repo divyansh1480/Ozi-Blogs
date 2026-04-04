@@ -13,7 +13,7 @@ services:
       - key: PORT
         value: 5000
       - key: MYSQL_URL
-        sync: false   # you'll paste this in the Render dashboard
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
@@ -23,11 +23,7 @@ services:
       - key: JWT_REFRESH_EXPIRY
         value: 7d
       - key: FRONTEND_URL
-        fromService:
-          name: oziblog-frontend
-          type: web
-          property: host
-          envVarKey: RENDER_EXTERNAL_URL
+        sync: false
       - key: RATE_LIMIT_WINDOW_MS
         value: 900000
       - key: RATE_LIMIT_MAX_REQUESTS
@@ -43,6 +39,6 @@ services:
     plan: free
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        sync: false   # paste: https://oziblog-api.onrender.com/api
+        sync: false
       - key: BLOB_READ_WRITE_TOKEN
-        sync: false   # paste your Vercel Blob token in the dashboard
+        sync: false
