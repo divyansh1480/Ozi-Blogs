@@ -1,0 +1,48 @@
+services:
+  # ── Backend API ────────────────────────────────────────────────────────────
+  - type: web
+    name: oziblog-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/app.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MYSQL_URL
+        sync: false   # you'll paste this in the Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_EXPIRY
+        value: 15m
+      - key: JWT_REFRESH_EXPIRY
+        value: 7d
+      - key: FRONTEND_URL
+        fromService:
+          name: oziblog-frontend
+          type: web
+          property: host
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+
+  # ── Frontend ───────────────────────────────────────────────────────────────
+  - type: web
+    name: oziblog-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        sync: false   # paste: https://oziblog-api.onrender.com/api
+      - key: BLOB_READ_WRITE_TOKEN
+        sync: false   # paste your Vercel Blob token in the dashboard

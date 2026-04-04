@@ -24,8 +24,8 @@ app.use(
         process.env.FRONTEND_URL,
         'http://localhost:3000',
       ].filter(Boolean);
-      // Allow Vercel preview deployments too
-      if (!origin || allowed.includes(origin) || origin.endsWith('.vercel.app')) {
+      // Allow Vercel and Render preview deployments
+      if (!origin || allowed.includes(origin) || origin.endsWith('.vercel.app') || origin.endsWith('.onrender.com')) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
