@@ -184,7 +184,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
                   ].map(topic => (
                     <Link
                       key={topic}
-                      href={`/blogs?search=${encodeURIComponent(topic)}`}
+                      href={`/blogs?topic=${encodeURIComponent(topic)}`}
                       className="text-xs bg-primary/10 text-primary-dark hover:bg-primary/20 px-2.5 py-1 rounded-full transition font-medium"
                     >
                       {topic}

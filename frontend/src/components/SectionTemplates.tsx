@@ -467,9 +467,10 @@ const SECTIONS: (Section & { category: Category })[] = [
 interface Props {
   onInsert: (html: string) => void;
   onClose: () => void;
+  onBlankCanvas?: () => void;
 }
 
-export default function SectionTemplates({ onInsert, onClose }: Props) {
+export default function SectionTemplates({ onInsert, onClose, onBlankCanvas }: Props) {
   const [activeCategory, setActiveCategory] = useState<Category>('Image + Text');
 
   const filtered = SECTIONS.filter(s => s.category === activeCategory);
@@ -479,8 +480,8 @@ export default function SectionTemplates({ onInsert, onClose }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
         <div>
-          <p className="text-sm font-semibold text-gray-900">Insert Section Layout</p>
-          <p className="text-xs text-gray-400 mt-0.5">Choose a layout and click to insert at cursor</p>
+          <p className="text-sm font-semibold text-gray-900">How would you like to start?</p>
+          <p className="text-xs text-gray-400 mt-0.5">Pick a layout or write freely on a blank canvas</p>
         </div>
         <button
           onClick={onClose}
@@ -490,8 +491,38 @@ export default function SectionTemplates({ onInsert, onClose }: Props) {
         </button>
       </div>
 
+      {/* Blank Canvas — always visible at the top */}
+      {onBlankCanvas && (
+        <div className="px-4 pt-4 pb-2">
+          <button
+            onClick={() => { onBlankCanvas(); onClose(); }}
+            className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-primary-light hover:bg-primary/5 transition-all duration-150 group active:scale-[0.99]"
+          >
+            <div className="w-12 h-12 rounded-xl bg-gray-50 group-hover:bg-primary/10 border border-gray-200 group-hover:border-primary/30 flex items-center justify-center transition shrink-0">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="text-gray-300 group-hover:text-primary transition">
+                <rect x="2" y="2" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 2"/>
+                <path d="M11 7v8M7 11h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-gray-800 group-hover:text-primary-dark transition">Blank Canvas</p>
+              <p className="text-xs text-gray-400 mt-0.5">Start with a clean editor and write freely</p>
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Divider */}
+      {onBlankCanvas && (
+        <div className="flex items-center gap-3 px-5 py-2">
+          <div className="flex-1 h-px bg-gray-100" />
+          <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">or pick a layout</span>
+          <div className="flex-1 h-px bg-gray-100" />
+        </div>
+      )}
+
       {/* Category Tabs */}
-      <div className="flex gap-1 px-5 pt-3 pb-0 border-b border-gray-100">
+      <div className="flex gap-1 px-5 pt-1 pb-0 border-b border-gray-100">
         {CATEGORIES.map(cat => (
           <button
             key={cat}
@@ -508,14 +539,13 @@ export default function SectionTemplates({ onInsert, onClose }: Props) {
       </div>
 
       {/* Grid */}
-      <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-72 overflow-y-auto">
+      <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-64 overflow-y-auto">
         {filtered.map((section) => (
           <button
             key={section.id}
             onClick={() => { onInsert(section.html); onClose(); }}
             className="group text-left border border-gray-200 rounded-xl p-3 hover:border-primary/50 hover:shadow-sm transition-all duration-150 hover:bg-primary/10/40 active:scale-[0.98]"
           >
-            {/* Visual preview */}
             <div className="mb-2.5 p-2 bg-gray-50 rounded-lg group-hover:bg-white transition overflow-hidden">
               {section.preview}
             </div>

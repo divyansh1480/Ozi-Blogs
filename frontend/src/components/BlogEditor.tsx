@@ -75,6 +75,7 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
   const [excerpt, setExcerpt] = useState(initialData?.excerpt || '');
   const [previewMode, setPreviewMode] = useState(false);
   const [showSections, setShowSections] = useState(false);
+  const [started, setStarted] = useState(!!(initialData?.content && initialData.content !== '<p></p>'));
   const [error, setError] = useState('');
   // null = idle, 'draft' | 'published' = that action is in flight
   const [savingAction, setSavingAction] = useState<'draft' | 'published' | null>(null);
@@ -88,7 +89,10 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
 
   const insertFnRef = useRef<((html: string) => void) | null>(null);
   const insertAtFnRef = useRef<((pos: number, html: string) => void) | null>(null);
+  const focusFnRef = useRef<(() => void) | null>(null);
   const pendingInsertPosRef = useRef<number | null>(null);
+  // Holds a section HTML that was chosen before the visible editor mounted
+  const pendingSectionRef = useRef<string | null>(null);
   const sectionsPanelRef = useRef<HTMLDivElement>(null);
   const sectionsButtonRef = useRef<HTMLButtonElement>(null);
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -192,15 +196,13 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
     }
   };
 
-  const handleInsert = (html: string) => {
+  const insertSection = (html: string) => {
     const pos = pendingInsertPosRef.current;
     pendingInsertPosRef.current = null;
     if (pos !== null && insertAtFnRef.current) {
       insertAtFnRef.current(pos, html);
     } else if (insertFnRef.current) {
       insertFnRef.current(html);
-    } else {
-      alert('Editor not ready yet — please wait a moment and try again.');
     }
   };
 
@@ -331,25 +333,81 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
             />
           </div>
 
-          {/* Section Templates Panel */}
+          {/* Section Templates Panel — shown above the canvas when picking */}
           {showSections && (
             <div ref={sectionsPanelRef}>
               <SectionTemplates
-                onInsert={handleInsert}
+                onInsert={(html) => {
+                  setShowSections(false);
+                  if (started) {
+                    // Editor already mounted — insert directly
+                    insertSection(html);
+                  } else {
+                    // Editor not yet visible — stash and flush in onReady
+                    pendingSectionRef.current = html;
+                    setStarted(true);
+                  }
+                }}
                 onClose={() => { setShowSections(false); pendingInsertPosRef.current = null; }}
+                onBlankCanvas={() => {
+                  setStarted(true);
+                  setShowSections(false);
+                  pendingInsertPosRef.current = null;
+                  setTimeout(() => focusFnRef.current?.(), 50);
+                }}
               />
             </div>
           )}
 
-          {/* Editor — key changes on restore so TipTap reinitialises with the recovered content */}
-          <RichTextEditor
-            key={editorKey}
-            content={content}
-            onChange={setContent}
-            placeholder="Start writing your blog..."
-            onReady={(fn) => { insertFnRef.current = fn; }}
-            onInsertAtReady={(fn) => { insertAtFnRef.current = fn; }}
-          />
+          {/* Canvas — big + when not started, editor once started */}
+          {!started ? (
+            <button
+              type="button"
+              onClick={() => setShowSections(true)}
+              className="w-full min-h-[380px] flex flex-col items-center justify-center gap-4
+                border-2 border-dashed border-gray-200 rounded-xl bg-white
+                hover:border-primary/40 hover:bg-primary/5 transition-all duration-200 group"
+            >
+              <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-gray-200 group-hover:border-primary/50 group-hover:bg-primary/10 flex items-center justify-center transition">
+                <span className="text-4xl leading-none text-gray-300 group-hover:text-primary transition select-none">+</span>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-semibold text-gray-400 group-hover:text-primary-dark transition">Click to start your blog</p>
+                <p className="text-xs text-gray-300 group-hover:text-primary/50 transition mt-1">Pick a section layout or write on a blank canvas</p>
+              </div>
+            </button>
+          ) : (
+            <RichTextEditor
+              key={editorKey}
+              content={content}
+              onChange={setContent}
+              placeholder="Start writing your blog..."
+              onReady={(fn) => {
+                insertFnRef.current = fn;
+                // Flush any section chosen before this editor mounted
+                if (pendingSectionRef.current) {
+                  fn(pendingSectionRef.current);
+                  pendingSectionRef.current = null;
+                }
+              }}
+              onInsertAtReady={(fn) => { insertAtFnRef.current = fn; }}
+              onFocusReady={(fn) => { focusFnRef.current = fn; }}
+            />
+          )}
+
+          {/* TipTap must be mounted to wire up refs — keep hidden until started */}
+          {!started && (
+            <div className="hidden">
+              <RichTextEditor
+                key={editorKey}
+                content={content}
+                onChange={setContent}
+                onReady={(fn) => { insertFnRef.current = fn; }}
+                onInsertAtReady={(fn) => { insertAtFnRef.current = fn; }}
+                onFocusReady={(fn) => { focusFnRef.current = fn; }}
+              />
+            </div>
+          )}
 
           {/* Auto-save indicator */}
           {!pendingDraft && (title.trim() || (content && content !== '<p></p>')) && (

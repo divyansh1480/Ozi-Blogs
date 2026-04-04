@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { registerUser, loginUser, getUserById, createPasswordResetToken, resetUserPassword } from '../services/authService';
 import { AppError } from '../middleware/errorHandler';
-import { verifyRefreshToken, generateAccessToken } from '../utils/jwt';
+import { verifyRefreshToken, generateAccessToken, generateRefreshToken } from '../utils/jwt';
 
 export async function register(req: Request, res: Response) {
   try {
@@ -143,17 +143,26 @@ export async function refreshToken(req: Request, res: Response) {
       throw new AppError(401, 'Invalid or expired refresh token');
     }
 
-    const newAccessToken = generateAccessToken({
-      id: payload.id,
-      email: payload.email,
-      username: payload.username,
-    });
+    const userPayload = { id: payload.id, email: payload.email, username: payload.username };
 
+    // Issue a fresh access token
+    const newAccessToken = generateAccessToken(userPayload);
     res.cookie('accessToken', newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 15 * 60 * 1000,
+      maxAge: 15 * 60 * 1000, // 15 minutes
+    });
+
+    // Slide the refresh token window — re-issue with a fresh maxAge so that
+    // active users never get logged out; only inactivity (no refresh calls)
+    // causes the refresh token to expire.
+    const newRefreshToken = generateRefreshToken(userPayload);
+    res.cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days — resets on every activity
     });
 
     res.json({ success: true });

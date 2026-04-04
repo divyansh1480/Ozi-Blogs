@@ -38,6 +38,7 @@ interface RichTextEditorProps {
   placeholder?: string;
   onReady?: (insertFn: (html: string) => void) => void;
   onInsertAtReady?: (insertAtFn: (pos: number, html: string) => void) => void;
+  onFocusReady?: (focusFn: () => void) => void;
 }
 
 const FONT_FAMILIES = [
@@ -60,7 +61,7 @@ const HIGHLIGHT_COLORS = [
   '#FEF08A', '#BBF7D0', '#BFDBFE', '#F5D0FE', '#FED7AA', '#FECACA',
 ];
 
-export default function RichTextEditor({ content, onChange, placeholder, onReady, onInsertAtReady }: RichTextEditorProps) {
+export default function RichTextEditor({ content, onChange, placeholder, onReady, onInsertAtReady, onFocusReady }: RichTextEditorProps) {
   const imageFileRef = useRef<HTMLInputElement>(null);
   const [showImageUrl, setShowImageUrl] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
@@ -111,6 +112,9 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
           attrs: { html, autoEdit: true },
         }).run();
       });
+    }
+    if (onFocusReady) {
+      onFocusReady(() => editor.commands.focus());
     }
   }, [editor]); // eslint-disable-line react-hooks/exhaustive-deps
 
