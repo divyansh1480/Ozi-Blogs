@@ -1,7 +1,15 @@
 import axios, { AxiosInstance } from 'axios';
 
+// In production, requests go to /api/* which Next.js proxies to the backend
+// via next.config.js rewrites — this keeps cookies same-origin.
+// In local dev, NEXT_PUBLIC_API_URL is used directly (e.g. http://localhost:5000/api).
+const baseURL =
+  typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
+    ? '/api'
+    : process.env.NEXT_PUBLIC_API_URL;
+
 const apiClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -30,11 +38,7 @@ apiClient.interceptors.response.use(
       original._retry = true;
       isRefreshing = true;
       try {
-        await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
-          {},
-          { withCredentials: true },
-        );
+        await apiClient.post('/auth/refresh', {});
         processQueue(null);
         return apiClient(original);
       } catch (refreshError) {

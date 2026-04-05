@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { User } from '@/types/index';
-import axios from 'axios';
+import apiClient from '@/lib/api';
 
 // ── Inactivity timeout ───────────────────────────────────────────────────────
 // User is logged out after this many ms of no interaction.
@@ -37,11 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // ── Core logout (called both manually and by inactivity) ─────────────────
   const logout = async () => {
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-        {},
-        { withCredentials: true },
-      );
+      await apiClient.post('/auth/logout', {});
     } catch {
       // Even if the request fails, clear client state
     }
@@ -103,9 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-          withCredentials: true,
-        });
+        const response = await apiClient.get('/auth/me');
         if (response.data.success && response.data.data?.user) {
           setUser(response.data.data.user);
         }
@@ -121,11 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // ── Login ─────────────────────────────────────────────────────────────────
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-        { email, password },
-        { withCredentials: true },
-      );
+      const response = await apiClient.post('/auth/login', { email, password });
       if (response.data.success && response.data.data?.user) {
         setUser(response.data.data.user);
       } else {
@@ -139,11 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // ── Register ──────────────────────────────────────────────────────────────
   const register = async (username: string, email: string, password: string, displayName?: string) => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        { username, email, password, displayName },
-        { withCredentials: true },
-      );
+      const response = await apiClient.post('/auth/register', { username, email, password, displayName });
       if (response.data.success && response.data.data?.user) {
         setUser(response.data.data.user);
       } else {
