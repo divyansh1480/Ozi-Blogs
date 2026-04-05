@@ -174,7 +174,7 @@
 
 
 import RegisterForm from '@/components/RegisterForm';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 export const metadata = {
   title: 'Sign Up - BlogHub',

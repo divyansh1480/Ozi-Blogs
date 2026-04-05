@@ -80,7 +80,6 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
   // null = idle, 'draft' | 'published' = that action is in flight
   const [savingAction, setSavingAction] = useState<'draft' | 'published' | null>(null);
   // Timestamp of last successful localStorage auto-save
-  const [lastAutoSaved, setLastAutoSaved] = useState<number | null>(null);
 
   // Draft recovery banner
   const [pendingDraft, setPendingDraft] = useState<DraftData | null>(null);
@@ -124,7 +123,6 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
       if (!title.trim() && (!content || content === '<p></p>') && !excerpt.trim()) return;
       const now = Date.now();
       writeDraft(userId, initialData?.id, { title, content, excerpt, savedAt: now });
-      setLastAutoSaved(now);
     }, 1500);
 
     return () => {
@@ -189,7 +187,6 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
       await onSave({ title: title.trim(), content, excerpt: excerpt.trim(), status });
       // Clear the draft only after a confirmed successful save
       clearDraft(userId, initialData?.id);
-      setLastAutoSaved(null);
     } catch (err: any) {
       setError(err.message || 'Failed to save blog');
     } finally {
