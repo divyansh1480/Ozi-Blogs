@@ -11,7 +11,7 @@ interface ProfileDropdownProps {
 }
 
 export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const initial = authorInitial(user?.displayName, user?.username);
@@ -56,20 +56,24 @@ export default function ProfileDropdown({ onClose }: ProfileDropdownProps) {
         >
           <span>👤</span> View Profile
         </Link>
-        <Link
-          href="/dashboard"
-          onClick={onClose}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-primary/10 hover:text-primary transition font-medium"
-        >
-          <span>⚡</span> Dashboard
-        </Link>
-        <Link
-          href="/blogs/new"
-          onClick={onClose}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-primary/10 hover:text-primary transition font-medium"
-        >
-          <span>✏️</span> Write Blog
-        </Link>
+        {isAdmin && (
+          <>
+            <Link
+              href="/dashboard"
+              onClick={onClose}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-primary/10 hover:text-primary transition font-medium"
+            >
+              <span>⚡</span> Dashboard
+            </Link>
+            <Link
+              href="/blogs/new"
+              onClick={onClose}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 hover:bg-primary/10 hover:text-primary transition font-medium"
+            >
+              <span>✏️</span> Write Blog
+            </Link>
+          </>
+        )}
       </div>
 
       <div className="border-t border-gray-100 py-2 px-2">

@@ -14,37 +14,30 @@ export default function Navbar() {
   const { toggle } = useSidebar();
   const [profileOpen, setProfileOpen] = useState(false);
   const [show, setShow] = useState(true);
-  // useRef so the scroll handler always reads the latest value without
-  // needing to be re-registered on every scroll tick
   const lastScrollY = useRef(0);
 
   const initial = authorInitial(user?.displayName, user?.username);
   const pathname = usePathname();
-  const isAuth = pathname?.startsWith('/auth');
+  const isAuth = pathname?.startsWith('/auth') || pathname?.startsWith('/admin');
+  const isOnBlogs = pathname === '/blogs';
 
   useEffect(() => {
     let ticking = false;
-
     const handleScroll = () => {
       if (ticking) return;
       ticking = true;
       window.requestAnimationFrame(() => {
         const currentScrollY = window.scrollY;
-        if (currentScrollY <= 0) {
-          setShow(true);
-        } else if (currentScrollY > lastScrollY.current) {
-          setShow(false); // scrolling down
-        } else {
-          setShow(true);  // scrolling up
-        }
+        if (currentScrollY <= 0) setShow(true);
+        else if (currentScrollY > lastScrollY.current) setShow(false);
+        else setShow(true);
         lastScrollY.current = currentScrollY;
         ticking = false;
       });
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // runs once — no stale closure because lastScrollY is a ref
+  }, []);
 
   return (
     <nav
@@ -71,24 +64,27 @@ export default function Navbar() {
             href="/blogs"
             className="flex flex-col items-end gap-2 text-lg sm:text-xl font-bold text-primary tracking-tight whitespace-nowrap"
           >
-            <Image
-              src="/uploads/ozilogo.png"
-              alt="Ozi Blogs Logo"
-              width={60}
-              height={12}
-              priority
-            />
+            <Image src="/uploads/ozilogo.png" alt="Ozi Blogs Logo" width={60} height={12} priority />
             <span className="leading-none">Blogs</span>
           </Link>
         </div>
 
         {/* ── RIGHT ── */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+
+          {/* All Blogs pill */}
           <Link
             href="/blogs"
-            className="hidden sm:block text-sm font-medium text-gray-600 hover:text-primary transition"
+            className={`hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition
+              ${isOnBlogs
+                ? 'bg-primary/10 text-primary-dark'
+                : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
+              }`}
           >
-            Blogs
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h6m-6-4h3" />
+            </svg>
+            All Blogs
           </Link>
 
           {isAuthenticated ? (
@@ -96,9 +92,9 @@ export default function Navbar() {
               {isAdmin && (
                 <Link
                   href="/blogs/new"
-                  className="text-sm font-medium bg-primary-light hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap"
+                  className="flex items-center gap-1.5 text-sm font-medium bg-primary-light hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap"
                 >
-                  <span className="hidden sm:inline font-medium">Write</span>
+                  <span className="hidden sm:inline">Write</span>
                   <span className="sm:hidden">✏️</span>
                 </Link>
               )}
