@@ -32,6 +32,16 @@ export default function ProfileClient({ user: initialUser, blogs }: Props) {
   // Construct BlogWithAuthor from Blog for BlogCard
   const blogsWithAuthor = blogs.map((b) => ({ ...b, author: user }));
 
+  async function handleAvatarDelete() {
+    try {
+      await api.updateProfile({ avatar: '' });
+      setLocalUser((u) => ({ ...u, avatar: undefined }));
+      updateUser({ avatar: undefined });
+    } catch {
+      setError('Failed to remove avatar');
+    }
+  }
+
   async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -101,6 +111,13 @@ export default function ProfileClient({ user: initialUser, blogs }: Props) {
                   >
                     {avatarUploading ? '…' : '📷'}
                   </button>
+                  {user.avatar && (
+                    <button
+                      onClick={handleAvatarDelete}
+                      title="Remove avatar"
+                      className="absolute -bottom-1 -right-1 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] border-2 border-white shadow transition"
+                    >✕</button>
+                  )}
                   <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
                 </>
               )}

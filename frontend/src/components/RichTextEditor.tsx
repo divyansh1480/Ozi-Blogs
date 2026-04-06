@@ -65,6 +65,7 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
   const imageFileRef = useRef<HTMLInputElement>(null);
   const [showImageUrl, setShowImageUrl] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [imageLinkUrl, setImageLinkUrl] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
 
@@ -143,11 +144,19 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
   const Sep = () => <div className="w-px h-5 bg-gray-200 mx-0.5 shrink-0" />;
 
   const insertImageFromUrl = () => {
-    if (imageUrl.trim()) {
-      editor.chain().focus().setImage({ src: imageUrl.trim() }).run();
-      setImageUrl('');
-      setShowImageUrl(false);
+    const src = imageUrl.trim();
+    const href = imageLinkUrl.trim();
+    if (!src) return;
+    if (href) {
+      editor.chain().focus().insertContent(
+        `<a href="${href}" target="_blank" rel="noopener noreferrer"><img src="${src}" /></a>`
+      ).run();
+    } else {
+      editor.chain().focus().setImage({ src }).run();
     }
+    setImageUrl('');
+    setImageLinkUrl('');
+    setShowImageUrl(false);
   };
 
   const insertImageFromFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -388,18 +397,38 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
             🌐
           </Btn>
           {showImageUrl && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-20 flex gap-1" style={{ minWidth: 280 }}>
+            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-3 z-20 flex flex-col gap-2" style={{ minWidth: 300 }}>
+              {/* Image URL */}
+              <div className="flex gap-1">
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && insertImageFromUrl()}
+                  placeholder="https://example.com/image.jpg"
+                  className="text-xs border border-gray-200 rounded px-2 py-1 flex-1 focus:outline-none focus:ring-1 focus:ring-pink-400"
+                  autoFocus
+                />
+                <button type="button" onClick={insertImageFromUrl} className="text-xs bg-pink-400 text-white px-2 py-1 rounded hover:bg-pink-500">Insert</button>
+                <button type="button" onClick={() => { setShowImageUrl(false); setImageUrl(''); setImageLinkUrl(''); }} className="text-xs text-gray-400 hover:text-gray-600 px-1">✕</button>
+              </div>
+              {/* Optional link */}
               <input
                 type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && insertImageFromUrl()}
-                placeholder="https://example.com/image.jpg"
-                className="text-xs border border-gray-200 rounded px-2 py-1 flex-1 focus:outline-none focus:ring-1 focus:ring-pink-400"
-                autoFocus
+                value={imageLinkUrl}
+                onChange={(e) => setImageLinkUrl(e.target.value)}
+                placeholder="Link URL (optional)"
+                className="text-xs border border-gray-200 rounded px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-pink-400"
               />
-              <button type="button" onClick={insertImageFromUrl} className="text-xs bg-pink-400 text-white px-2 py-1 rounded hover:bg-pink-500">Insert</button>
-              <button type="button" onClick={() => setShowImageUrl(false)} className="text-xs text-gray-400 hover:text-gray-600 px-1">✕</button>
+              {/* Preview */}
+              {imageUrl.trim() && (
+                <img
+                  src={imageUrl.trim()}
+                  alt="preview"
+                  className="w-full max-h-32 object-contain rounded border border-gray-100 bg-gray-50"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              )}
             </div>
           )}
         </div>

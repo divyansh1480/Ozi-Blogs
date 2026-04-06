@@ -52,7 +52,7 @@ function BlogsContent() {
     getNextPageParam: (lastPage) =>
       lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
     initialPageParam: 1,
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
   });
 
   const blogs = data?.pages.flatMap((p) => p.items) ?? [];
@@ -116,7 +116,7 @@ function BlogsContent() {
 
       {/* Header */}
       <div className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-4 py-6 sm:py-10">
+        <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">All Blogs</h1>
           <p className="text-gray-500 text-sm sm:text-base mb-4 sm:mb-6">
             Discover stories and ideas from our community
@@ -181,7 +181,7 @@ function BlogsContent() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-10">
+      <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
         {activeTopic && (
           <p className="text-sm text-gray-500 mb-6">
             Showing posts tagged <span className="font-medium text-gray-800">"{activeTopic}"</span>
