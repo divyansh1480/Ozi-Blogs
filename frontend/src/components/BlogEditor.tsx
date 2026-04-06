@@ -66,6 +66,11 @@ function clearDraft(userId: string, id?: string) {
   } catch {}
 }
 
+// null  = nothing chosen yet (show + canvas)
+// 'section' = user picked a section template (render HTML directly, no TipTap)
+// 'blank'   = user chose Blank Canvas OR editing existing blog (TipTap editor)
+type EditorMode = null | 'section' | 'blank';
+
 export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
   const { user } = useAuth();
   const userId = user?.id ?? '';
@@ -75,11 +80,12 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
   const [excerpt, setExcerpt] = useState(initialData?.excerpt || '');
   const [previewMode, setPreviewMode] = useState(false);
   const [showSections, setShowSections] = useState(false);
-  const [started, setStarted] = useState(!!(initialData?.content && initialData.content !== '<p></p>'));
+  const [mode, setMode] = useState<EditorMode>(
+    initialData?.content && initialData.content !== '<p></p>' ? 'blank' : null
+  );
   const [error, setError] = useState('');
   // null = idle, 'draft' | 'published' = that action is in flight
   const [savingAction, setSavingAction] = useState<'draft' | 'published' | null>(null);
-  // Timestamp of last successful localStorage auto-save
 
   // Draft recovery banner
   const [pendingDraft, setPendingDraft] = useState<DraftData | null>(null);
@@ -90,8 +96,6 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
   const insertAtFnRef = useRef<((pos: number, html: string) => void) | null>(null);
   const focusFnRef = useRef<(() => void) | null>(null);
   const pendingInsertPosRef = useRef<number | null>(null);
-  // Holds a section HTML that was chosen before the visible editor mounted
-  const pendingSectionRef = useRef<string | null>(null);
   const sectionsPanelRef = useRef<HTMLDivElement>(null);
   const sectionsButtonRef = useRef<HTMLButtonElement>(null);
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -133,13 +137,11 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
   // ── Draft banner actions ──────────────────────────────────────────────────
   const restoreDraft = () => {
     if (!pendingDraft) return;
-    // Update all three fields first, then bump editorKey to remount
-    // RichTextEditor so it picks up the restored content prop
     setTitle(pendingDraft.title);
     setExcerpt(pendingDraft.excerpt);
     setContent(pendingDraft.content);
     setEditorKey(k => k + 1);
-    if (!started) setStarted(true); // ensure visible editor shows restored content
+    if (!mode) setMode('blank'); // ensure editor is visible when restoring
     setPendingDraft(null);
   };
 
@@ -331,34 +333,35 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
             />
           </div>
 
-          {/* Section Templates Panel — shown above the canvas when picking */}
+          {/* Section Templates Panel */}
           {showSections && (
             <div ref={sectionsPanelRef}>
               <SectionTemplates
                 onInsert={(html) => {
                   setShowSections(false);
-                  if (started) {
-                    // Editor already mounted — insert directly
+                  pendingInsertPosRef.current = null;
+                  if (mode === 'blank') {
+                    // TipTap already mounted — insert directly
                     insertSection(html);
                   } else {
-                    // Editor not yet visible — stash and flush in onReady
-                    pendingSectionRef.current = html;
-                    setStarted(true);
+                    // Switch to blank mode so TipTap mounts, then insert via onReady
+                    setContent(html);
+                    setMode('blank');
                   }
                 }}
                 onClose={() => { setShowSections(false); pendingInsertPosRef.current = null; }}
                 onBlankCanvas={() => {
-                  setStarted(true);
                   setShowSections(false);
                   pendingInsertPosRef.current = null;
+                  setMode('blank');
                   setTimeout(() => focusFnRef.current?.(), 50);
                 }}
               />
             </div>
           )}
 
-          {/* + canvas button — only when no mode chosen yet and sections panel is closed */}
-          {!started && !showSections && (
+          {/* + canvas button — nothing chosen yet and panel is closed */}
+          {!mode && !showSections && (
             <button
               type="button"
               onClick={() => setShowSections(true)}
@@ -376,38 +379,17 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
             </button>
           )}
 
-          {/* Editor — only shown after a mode is chosen (section or blank canvas) */}
-          {started && (
+          {/* TipTap editor — only for blank canvas mode */}
+          {mode === 'blank' && (
             <RichTextEditor
               key={editorKey}
               content={content}
               onChange={setContent}
               placeholder="Start writing your blog..."
-              onReady={(fn) => {
-                insertFnRef.current = fn;
-                // Flush any section chosen before this editor mounted
-                if (pendingSectionRef.current) {
-                  fn(pendingSectionRef.current);
-                  pendingSectionRef.current = null;
-                }
-              }}
+              onReady={(fn) => { insertFnRef.current = fn; }}
               onInsertAtReady={(fn) => { insertAtFnRef.current = fn; }}
               onFocusReady={(fn) => { focusFnRef.current = fn; }}
             />
-          )}
-
-          {/* TipTap must be mounted to wire up refs — keep hidden until started */}
-          {!started && (
-            <div className="hidden">
-              <RichTextEditor
-                key={editorKey}
-                content={content}
-                onChange={setContent}
-                onReady={(fn) => { insertFnRef.current = fn; }}
-                onInsertAtReady={(fn) => { insertAtFnRef.current = fn; }}
-                onFocusReady={(fn) => { focusFnRef.current = fn; }}
-              />
-            </div>
           )}
 
           {/* Auto-save indicator */}
