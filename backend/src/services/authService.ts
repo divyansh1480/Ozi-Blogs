@@ -79,11 +79,6 @@ export async function loginUser(data: LoginRequestBody): Promise<{ user: User; t
     const isPasswordValid = await comparePasswords(password, userRecord.passwordHash);
     if (!isPasswordValid) throw new Error('Incorrect password');
 
-    // Block login if email not verified
-    if (!userRecord.emailVerified) {
-      throw new Error('Please verify your email before logging in. Check your inbox for the verification link.');
-    }
-
     const tokens = generateTokens({
       id: userRecord.id,
       email: userRecord.email,
