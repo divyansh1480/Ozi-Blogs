@@ -117,7 +117,7 @@ export default function LoginForm() {
               value={emailOrUsername}
               onChange={(e) => setEmailOrUsername(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="your@email.com or username"
+              placeholder="email or username"
               autoComplete="username"
               required
             />

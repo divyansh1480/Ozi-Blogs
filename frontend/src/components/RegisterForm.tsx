@@ -114,7 +114,7 @@ export default function RegisterForm() {
                 else if (error.includes('email')) setError('');
               }}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="your@email.com" autoComplete="email" required />
+              placeholder="email" autoComplete="email" required />
           </div>
 
           <div>
