@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [sessionExpiredMsg, setSessionExpiredMsg] = useState('');
   const router = useRouter();
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const userRef = useRef<User | null>(null);
   // Stable ref to logout so the inactivity handler never has a stale closure
   const logoutRef = useRef<() => Promise<void>>(async () => {});
 
@@ -100,9 +101,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [!!user]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Keep userRef in sync so session-expired handler can read it without stale closure
+  useEffect(() => { userRef.current = user; }, [user]);
+
   // ── Session-expired event from api.ts interceptor ────────────────────────
   useEffect(() => {
-    const handler = async () => {
+    const handler = () => {
+      // Only treat as session expiry if the user was actually logged in.
+      // Unauthenticated 401s (e.g. /auth/me on page load) must not trigger a redirect.
+      if (!userRef.current) return;
       setUser(null);
       localStorage.removeItem(LAST_ACTIVITY_KEY);
       setSessionExpiredMsg('Session expired. Please log in again.');
