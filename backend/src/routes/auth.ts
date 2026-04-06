@@ -1,12 +1,14 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import { register, login, logout, getCurrentUser, refreshToken, forgotPassword, resetPassword } from '../controllers/authController';
+import {
+  register, login, logout, getCurrentUser, refreshToken,
+  forgotPassword, resetPassword, verifyEmail, resendVerification,
+} from '../controllers/authController';
 import { authMiddleware } from '../middleware/auth';
 import { asyncHandler } from '../middleware/errorHandler';
 
 const router = Router();
 
-// Rate limit only register and login — not /me or /logout
 const loginLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
@@ -21,10 +23,13 @@ router.post('/login', loginLimiter, asyncHandler(login));
 router.post('/logout', asyncHandler(logout));
 router.post('/refresh', asyncHandler(refreshToken));
 
+router.get('/verify-email', asyncHandler(verifyEmail));
+router.post('/resend-verification', asyncHandler(resendVerification));
+
 router.post('/forgot-password', asyncHandler(forgotPassword));
 router.post('/reset-password', asyncHandler(resetPassword));
 
-// Protected routes — not rate limited
+// Protected routes
 router.get('/me', authMiddleware, asyncHandler(getCurrentUser));
 
 export default router;

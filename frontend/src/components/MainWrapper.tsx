@@ -10,16 +10,3 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
     </div>
   );
 }
-
-
-// 'use client';
-
-// import { useSidebar } from '@/context/SidebarContext';
-
-// export default function MainWrapper({ children }) {
-//   return (
-//     <main className="pt-16">
-//       {children}
-//     </main>
-//   );
-// }

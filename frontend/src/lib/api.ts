@@ -56,7 +56,9 @@ apiClient.interceptors.response.use(
 export const api = {
   // Auth
   register: (data: any) => apiClient.post('/auth/register', data),
-  login: (data: any) => apiClient.post('/auth/login', data),
+  login: (data: { emailOrUsername: string; password: string }) => apiClient.post('/auth/login', data),
+  verifyEmail: (token: string) => apiClient.get(`/auth/verify-email?token=${encodeURIComponent(token)}`),
+  resendVerification: (emailOrUsername: string) => apiClient.post('/auth/resend-verification', { emailOrUsername }),
   logout: () => apiClient.post('/auth/logout'),
   getCurrentUser: () => apiClient.get('/auth/me'),
   refreshToken: (data: any) => apiClient.post('/auth/refresh', data),

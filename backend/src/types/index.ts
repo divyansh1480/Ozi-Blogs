@@ -6,6 +6,7 @@ export interface User {
   displayName?: string;
   bio?: string;
   avatar?: string;
+  emailVerified?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -22,7 +23,7 @@ export interface RegisterRequestBody {
 }
 
 export interface LoginRequestBody {
-  email: string;
+  emailOrUsername: string;
   password: string;
 }
 

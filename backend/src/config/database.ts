@@ -173,6 +173,22 @@ export async function createTables() {
       );
     }
 
+    // Migration: add email verification columns if not exists (one at a time for MySQL 5.x compat)
+    const [evCol] = await connection.execute(
+      `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'emailVerified'`,
+    );
+    if ((evCol as any[]).length === 0) {
+      await connection.execute(`ALTER TABLE users ADD COLUMN emailVerified TINYINT(1) DEFAULT 0`);
+    }
+    const [evtCol] = await connection.execute(
+      `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'emailVerificationToken'`,
+    );
+    if ((evtCol as any[]).length === 0) {
+      await connection.execute(`ALTER TABLE users ADD COLUMN emailVerificationToken VARCHAR(255) DEFAULT NULL`);
+    }
+
     console.log('✓ Database tables created/verified');
   } catch (error) {
     console.error('✗ Error creating tables:', error);

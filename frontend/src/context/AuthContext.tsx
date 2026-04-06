@@ -113,9 +113,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // ── Login ─────────────────────────────────────────────────────────────────
-  const login = async (email: string, password: string) => {
+  const login = async (emailOrUsername: string, password: string) => {
     try {
-      const response = await apiClient.post('/auth/login', { email, password });
+      const response = await apiClient.post('/auth/login', { emailOrUsername, password });
       if (response.data.success && response.data.data?.user) {
         setUser(response.data.data.user);
       } else {
