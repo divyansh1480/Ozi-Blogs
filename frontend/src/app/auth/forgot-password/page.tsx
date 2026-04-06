@@ -9,20 +9,22 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [resetUrl, setResetUrl] = useState('');
   const [error, setError] = useState('');
+  const [notFound, setNotFound] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setNotFound(false);
     setLoading(true);
     try {
       const res = await api.forgotPassword(email);
       setSubmitted(true);
-      if (res.data.resetUrl) {
-        setResetUrl(res.data.resetUrl);
-      }
+      if (res.data.resetUrl) setResetUrl(res.data.resetUrl);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Something went wrong');
+      const msg = err.response?.data?.error || 'Something went wrong';
+      setError(msg);
+      if (err.response?.status === 404) setNotFound(true);
     } finally {
       setLoading(false);
     }
@@ -38,7 +40,15 @@ export default function ForgotPasswordPage() {
           </p>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg text-sm">{error}</div>
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              {error}
+              {notFound && (
+                <p className="mt-2">
+                  Don't have an account?{' '}
+                  <a href="/auth/register" className="underline font-medium">Sign up here →</a>
+                </p>
+              )}
+            </div>
           )}
 
           {!submitted ? (

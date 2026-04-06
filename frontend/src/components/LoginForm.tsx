@@ -14,6 +14,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [showResend, setShowResend] = useState(false);
   const [resendSent, setResendSent] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const { login } = useAuth();
   const router = useRouter();
@@ -33,6 +34,7 @@ export default function LoginForm() {
     e.preventDefault();
     setError('');
     setShowResend(false);
+    setShowSignUp(false);
 
     const clientError = preValidate();
     if (clientError) { setError(clientError); return; }
@@ -45,6 +47,7 @@ export default function LoginForm() {
       const msg = err.message || 'Login failed';
       setError(msg);
       if (msg.toLowerCase().includes('verify')) setShowResend(true);
+      if (msg.toLowerCase().includes('no account found')) setShowSignUp(true);
     } finally {
       setLoading(false);
     }
@@ -72,6 +75,12 @@ export default function LoginForm() {
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
             {error}
+            {showSignUp && (
+              <p className="mt-2 text-sm">
+                No account found.{' '}
+                <a href="/auth/register" className="underline font-medium text-red-700">Sign up to create one →</a>
+              </p>
+            )}
             {showResend && !resendSent && (
               <button
                 type="button"
