@@ -37,10 +37,12 @@ export async function register(req: Request, res: Response) {
 
 export async function login(req: Request, res: Response) {
   try {
-    const { emailOrUsername, password } = req.body;
-    if (!emailOrUsername || !password) throw new AppError(400, 'Email/username and password are required');
+    // Accept both 'emailOrUsername' (new) and 'email' (legacy) so any frontend version works
+    const { emailOrUsername, email, password } = req.body;
+    const identifier = (emailOrUsername || email || '').trim();
+    if (!identifier || !password) throw new AppError(400, 'Email/username and password are required');
 
-    const { user, tokens } = await loginUser({ emailOrUsername, password });
+    const { user, tokens } = await loginUser({ emailOrUsername: identifier, password });
 
     res.cookie('accessToken', tokens.accessToken, cookieOpts(15 * 60 * 1000));
     res.cookie('refreshToken', tokens.refreshToken, cookieOpts(7 * 24 * 60 * 60 * 1000));
