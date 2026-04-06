@@ -357,8 +357,8 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
             </div>
           )}
 
-          {/* Canvas — big + when not started (hidden while sections panel is open), editor once started */}
-          {!started && !showSections ? (
+          {/* + canvas button — only when no mode chosen yet and sections panel is closed */}
+          {!started && !showSections && (
             <button
               type="button"
               onClick={() => setShowSections(true)}
@@ -374,7 +374,10 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
                 <p className="text-xs text-gray-300 group-hover:text-primary/50 transition mt-1">Pick a section layout or write on a blank canvas</p>
               </div>
             </button>
-          ) : (
+          )}
+
+          {/* Editor — only shown after a mode is chosen (section or blank canvas) */}
+          {started && (
             <RichTextEditor
               key={editorKey}
               content={content}
