@@ -340,13 +340,13 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
                 onInsert={(html) => {
                   setShowSections(false);
                   pendingInsertPosRef.current = null;
-                  if (mode === 'blank') {
+                  if (mode !== null) {
                     // TipTap already mounted — insert directly
                     insertSection(html);
                   } else {
-                    // Switch to blank mode so TipTap mounts, then insert via onReady
+                    // TipTap not yet mounted — set content and switch to section mode
                     setContent(html);
-                    setMode('blank');
+                    setMode('section');
                   }
                 }}
                 onClose={() => { setShowSections(false); pendingInsertPosRef.current = null; }}
@@ -379,13 +379,14 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
             </button>
           )}
 
-          {/* TipTap editor — only for blank canvas mode */}
-          {mode === 'blank' && (
+          {/* TipTap editor — visible for blank canvas; invisible shell for section mode */}
+          {mode !== null && (
             <RichTextEditor
               key={editorKey}
               content={content}
               onChange={setContent}
               placeholder="Start writing your blog..."
+              sectionMode={mode === 'section'}
               onReady={(fn) => { insertFnRef.current = fn; }}
               onInsertAtReady={(fn) => { insertAtFnRef.current = fn; }}
               onFocusReady={(fn) => { focusFnRef.current = fn; }}

@@ -36,6 +36,7 @@ interface RichTextEditorProps {
   content: string;
   onChange: (html: string) => void;
   placeholder?: string;
+  sectionMode?: boolean; // hides toolbar + border; used when section templates are active
   onReady?: (insertFn: (html: string) => void) => void;
   onInsertAtReady?: (insertAtFn: (pos: number, html: string) => void) => void;
   onFocusReady?: (focusFn: () => void) => void;
@@ -61,7 +62,7 @@ const HIGHLIGHT_COLORS = [
   '#FEF08A', '#BBF7D0', '#BFDBFE', '#F5D0FE', '#FED7AA', '#FECACA',
 ];
 
-export default function RichTextEditor({ content, onChange, placeholder, onReady, onInsertAtReady, onFocusReady }: RichTextEditorProps) {
+export default function RichTextEditor({ content, onChange, placeholder, sectionMode, onReady, onInsertAtReady, onFocusReady }: RichTextEditorProps) {
   const imageFileRef = useRef<HTMLInputElement>(null);
   const [showImageUrl, setShowImageUrl] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
@@ -192,9 +193,9 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
   };
 
   return (
-    <div className="border border-gray-300 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-pink-400 bg-white">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-gray-200 bg-gray-50">
+    <div className={sectionMode ? '' : 'border border-gray-300 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-pink-400 bg-white'}>
+      {/* Toolbar — hidden in section mode */}
+      <div className={`flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-gray-200 bg-gray-50 ${sectionMode ? 'hidden' : ''}`}>
 
         {/* Font Family */}
         <select
@@ -459,8 +460,8 @@ export default function RichTextEditor({ content, onChange, placeholder, onReady
       {/* Editor content */}
       <EditorContent editor={editor} />
 
-      {/* Status bar */}
-      <div className="flex items-center justify-end px-4 py-1.5 border-t border-gray-100 bg-gray-50 text-xs text-gray-400">
+      {/* Status bar — hidden in section mode */}
+      <div className={`flex items-center justify-end px-4 py-1.5 border-t border-gray-100 bg-gray-50 text-xs text-gray-400 ${sectionMode ? 'hidden' : ''}`}>
         {wordCount} words
       </div>
     </div>
