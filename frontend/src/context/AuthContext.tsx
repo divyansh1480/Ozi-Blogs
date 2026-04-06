@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { User } from '@/types/index';
 import apiClient from '@/lib/api';
 
@@ -19,6 +20,8 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  sessionExpiredMsg: string;
+  clearSessionExpiredMsg: () => void;
   login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string, displayName?: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -30,6 +33,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [sessionExpiredMsg, setSessionExpiredMsg] = useState('');
+  const router = useRouter();
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Stable ref to logout so the inactivity handler never has a stale closure
   const logoutRef = useRef<() => Promise<void>>(async () => {});
@@ -95,6 +100,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [!!user]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Session-expired event from api.ts interceptor ────────────────────────
+  useEffect(() => {
+    const handler = async () => {
+      setUser(null);
+      localStorage.removeItem(LAST_ACTIVITY_KEY);
+      setSessionExpiredMsg('Session expired. Please log in again.');
+      router.push('/auth/login');
+    };
+    window.addEventListener('auth:session-expired', handler);
+    return () => window.removeEventListener('auth:session-expired', handler);
+  }, [router]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ── Initial auth check on mount ──────────────────────────────────────────
   useEffect(() => {
     const checkAuth = async () => {
@@ -144,12 +161,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser((u) => (u ? { ...u, ...patch } : u));
   };
 
+  const clearSessionExpiredMsg = () => setSessionExpiredMsg('');
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isLoading,
         isAuthenticated: !!user,
+        sessionExpiredMsg,
+        clearSessionExpiredMsg,
         login,
         register,
         logout,

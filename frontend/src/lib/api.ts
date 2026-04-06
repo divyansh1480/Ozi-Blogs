@@ -41,9 +41,13 @@ apiClient.interceptors.response.use(
         await apiClient.post('/auth/refresh', {});
         processQueue(null);
         return apiClient(original);
-      } catch (refreshError) {
-        processQueue(refreshError);
-        return Promise.reject(refreshError);
+      } catch {
+        processQueue(new Error('Session expired'));
+        // Fire a global event so AuthContext can clear state and redirect
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('auth:session-expired'));
+        }
+        return Promise.reject(new Error('Session expired. Please log in again.'));
       } finally {
         isRefreshing = false;
       }

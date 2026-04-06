@@ -16,7 +16,7 @@ export default function LoginForm() {
   const [resendSent, setResendSent] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
-  const { login } = useAuth();
+  const { login, sessionExpiredMsg, clearSessionExpiredMsg } = useAuth();
   const router = useRouter();
 
   // Client-side pre-validation for instant feedback
@@ -71,6 +71,16 @@ export default function LoginForm() {
 
       <div className="mt-20 relative z-10 bg-white rounded-lg shadow-lg p-8">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
+
+        {sessionExpiredMsg && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-sm flex items-start gap-2">
+            <span>⚠️</span>
+            <span>
+              {sessionExpiredMsg}
+              <button type="button" onClick={clearSessionExpiredMsg} className="ml-2 text-amber-600 hover:text-amber-800 underline text-xs">Dismiss</button>
+            </span>
+          </div>
+        )}
 
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
