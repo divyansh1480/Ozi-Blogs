@@ -78,7 +78,7 @@ export async function refreshToken(req: Request, res: Response) {
     const payload = verifyRefreshToken(token);
     if (!payload) throw new AppError(401, 'Invalid or expired refresh token');
 
-    const userPayload = { id: payload.id, email: payload.email, username: payload.username };
+    const userPayload = { id: payload.id, email: payload.email, username: payload.username, role: payload.role };
     res.cookie('accessToken', generateAccessToken(userPayload), cookieOpts(15 * 60 * 1000));
     res.cookie('refreshToken', generateRefreshToken(userPayload), cookieOpts(7 * 24 * 60 * 60 * 1000));
 

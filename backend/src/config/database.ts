@@ -189,6 +189,18 @@ export async function createTables() {
       await connection.execute(`ALTER TABLE users ADD COLUMN emailVerificationToken VARCHAR(255) DEFAULT NULL`);
     }
 
+    // Migration: add role column if not exists
+    const [roleCol] = await connection.execute(
+      `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'role'`,
+    );
+    if ((roleCol as any[]).length === 0) {
+      await connection.execute(`ALTER TABLE users ADD COLUMN role VARCHAR(50) DEFAULT 'user'`);
+      // Promote all existing users to admin (first-run: only real admin accounts exist)
+      await connection.execute(`UPDATE users SET role = 'admin'`);
+      console.log('✓ role column added — existing users promoted to admin');
+    }
+
     console.log('✓ Database tables created/verified');
   } catch (error) {
     console.error('✗ Error creating tables:', error);

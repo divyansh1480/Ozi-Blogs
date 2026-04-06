@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import {
-  register, login, logout, getCurrentUser, refreshToken,
+  login, logout, getCurrentUser, refreshToken,
   forgotPassword, resetPassword, verifyEmail, resendVerification,
 } from '../controllers/authController';
 import { authMiddleware } from '../middleware/auth';
@@ -17,8 +17,8 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Public routes
-router.post('/register', loginLimiter, asyncHandler(register));
+// Registration is disabled — admin accounts are created directly in the database
+router.post('/register', (_req, res) => res.status(403).json({ success: false, error: 'Registration is not open' }));
 router.post('/login', loginLimiter, asyncHandler(login));
 router.post('/logout', asyncHandler(logout));
 router.post('/refresh', asyncHandler(refreshToken));

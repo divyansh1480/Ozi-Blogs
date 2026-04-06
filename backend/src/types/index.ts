@@ -6,6 +6,7 @@ export interface User {
   displayName?: string;
   bio?: string;
   avatar?: string;
+  role?: string;
   emailVerified?: boolean;
   createdAt: string;
   updatedAt: string;
@@ -105,6 +106,7 @@ export interface JwtPayload {
   id: string;
   email: string;
   username: string;
+  role?: string;
   iat?: number;
   exp?: number;
 }

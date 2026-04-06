@@ -12,18 +12,18 @@ interface EditBlogPageProps {
 }
 
 export default function EditBlogPage({ params }: EditBlogPageProps) {
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isAdmin, isLoading, user } = useAuth();
   const router = useRouter();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/auth/login');
+    if (!isLoading && (!isAuthenticated || !isAdmin)) {
+      router.push('/admin/login');
       return;
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, isAdmin, router]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -64,7 +64,7 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
     }
   };
 
-  if (isLoading || !isAuthenticated || loading) return null;
+  if (isLoading || !isAuthenticated || !isAdmin || loading) return null;
   if (error) return <div className="p-10 text-center text-red-500">{error}</div>;
   if (!blog) return null;
 

@@ -44,6 +44,16 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   }
 }
 
+export function adminMiddleware(req: Request, res: Response, next: NextFunction) {
+  // Must be authenticated first
+  authMiddleware(req, res, () => {
+    if (req.user?.role !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Forbidden: admin access required' });
+    }
+    next();
+  });
+}
+
 export function optionalAuthMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
     const token = req.cookies?.accessToken;

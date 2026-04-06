@@ -357,8 +357,8 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
             </div>
           )}
 
-          {/* Canvas — big + when not started, editor once started */}
-          {!started ? (
+          {/* Canvas — big + when not started (hidden while sections panel is open), editor once started */}
+          {!started && !showSections ? (
             <button
               type="button"
               onClick={() => setShowSections(true)}

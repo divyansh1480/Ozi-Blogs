@@ -35,13 +35,14 @@ export async function registerUser(data: RegisterRequestBody): Promise<{ user: U
       console.error('[EMAIL] Failed to send verification email:', err.message);
     });
 
-    const tokens = generateTokens({ id: userId, email: data.email, username: data.username });
+    const tokens = generateTokens({ id: userId, email: data.email, username: data.username, role: 'user' });
 
     const user: User = {
       id: userId,
       username: data.username,
       email: data.email,
       displayName: data.displayName || data.username,
+      role: 'user',
       emailVerified: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -83,6 +84,7 @@ export async function loginUser(data: LoginRequestBody): Promise<{ user: User; t
       id: userRecord.id,
       email: userRecord.email,
       username: userRecord.username,
+      role: userRecord.role || 'user',
     });
 
     const user: User = {
@@ -92,6 +94,7 @@ export async function loginUser(data: LoginRequestBody): Promise<{ user: User; t
       displayName: userRecord.displayName,
       bio: userRecord.bio,
       avatar: userRecord.avatar,
+      role: userRecord.role || 'user',
       emailVerified: !!userRecord.emailVerified,
       createdAt: userRecord.createdAt,
       updatedAt: userRecord.updatedAt,
@@ -162,6 +165,7 @@ export async function getUserById(id: string): Promise<User | null> {
       displayName: user.displayName,
       bio: user.bio,
       avatar: user.avatar,
+      role: user.role || 'user',
       emailVerified: !!user.emailVerified,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,

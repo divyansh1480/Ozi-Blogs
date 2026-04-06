@@ -10,7 +10,7 @@ import { authorInitial } from '@/lib/utils';
 import Image from 'next/image';
 
 export default function Navbar() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuth();
   const { toggle } = useSidebar();
   const [profileOpen, setProfileOpen] = useState(false);
   const [show, setShow] = useState(true);
@@ -93,13 +93,15 @@ export default function Navbar() {
 
           {isAuthenticated ? (
             <>
-              <Link
-                href="/blogs/new"
-                className="text-sm font-medium bg-primary-light hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap"
-              >
-                <span className="hidden sm:inline font-medium">Write</span>
-                <span className="sm:hidden">✏️</span>
-              </Link>
+              {isAdmin && (
+                <Link
+                  href="/blogs/new"
+                  className="text-sm font-medium bg-primary-light hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap"
+                >
+                  <span className="hidden sm:inline font-medium">Write</span>
+                  <span className="sm:hidden">✏️</span>
+                </Link>
+              )}
 
               <div className="relative">
                 <button
@@ -112,23 +114,7 @@ export default function Navbar() {
                 {profileOpen && <ProfileDropdown onClose={() => setProfileOpen(false)} />}
               </div>
             </>
-          ) : (
-            <>
-              <Link
-                href="/auth/login"
-                className="text-sm font-medium text-gray-600 hover:text-primary transition whitespace-nowrap"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/auth/register"
-                className="text-sm font-medium bg-primary-light hover:bg-primary-dark text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition whitespace-nowrap"
-              >
-                <span className="hidden sm:inline font-medium">Sign Up</span>
-                <span className="sm:hidden">Join</span>
-              </Link>
-            </>
-          )}
+          ) : null}
         </div>
 
       </div>

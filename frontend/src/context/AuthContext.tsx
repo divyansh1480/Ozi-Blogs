@@ -20,6 +20,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   sessionExpiredMsg: string;
   clearSessionExpiredMsg: () => void;
   login: (email: string, password: string) => Promise<void>;
@@ -113,7 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       localStorage.removeItem(LAST_ACTIVITY_KEY);
       setSessionExpiredMsg('Session expired. Please log in again.');
-      router.push('/auth/login');
+      router.push('/admin/login');
     };
     window.addEventListener('auth:session-expired', handler);
     return () => window.removeEventListener('auth:session-expired', handler);
@@ -176,6 +177,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        isAdmin: user?.role === 'admin',
         sessionExpiredMsg,
         clearSessionExpiredMsg,
         login,

@@ -13,14 +13,14 @@ import ImportBlogsModal from '@/components/ImportBlogsModal';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function DashboardPage() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
   const [showImport, setShowImport] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) router.push('/auth/login');
-  }, [isLoading, isAuthenticated, router]);
+    if (!isLoading && (!isAuthenticated || !isAdmin)) router.push('/admin/login');
+  }, [isLoading, isAuthenticated, isAdmin, router]);
 
   const { data: blogs = [], isLoading: loading, refetch: fetchMyBlogs } = useQuery({
     queryKey: ['my-blogs', user?.id],
@@ -57,7 +57,7 @@ export default function DashboardPage() {
     }
   };
 
-  if (isLoading || !isAuthenticated) return null;
+  if (isLoading || !isAuthenticated || !isAdmin) return null;
 
   const published = blogs.filter((b) => b.status === 'published');
   const drafts = blogs.filter((b) => b.status === 'draft');

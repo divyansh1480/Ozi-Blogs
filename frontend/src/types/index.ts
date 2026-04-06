@@ -6,6 +6,7 @@ export interface User {
   displayName?: string;
   bio?: string;
   avatar?: string;
+  role?: string;
   createdAt: string;
   updatedAt: string;
 }

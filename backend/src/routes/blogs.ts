@@ -47,7 +47,7 @@ import {
   getUserBlogList
 } from '../controllers/blogController';
 import { importBlogsFromExcel } from '../controllers/importController';
-import { authMiddleware } from '../middleware/auth';
+import { authMiddleware, adminMiddleware } from '../middleware/auth';
 import { asyncHandler } from '../middleware/errorHandler';
 
 const router = Router();
@@ -78,14 +78,14 @@ router.get('/user/me', authMiddleware, asyncHandler(getUserBlogList));
 
 router.post(
   '/import',
-  authMiddleware,
-  upload.single('file') as RequestHandler, // ✅ FIXED HERE
+  adminMiddleware,
+  upload.single('file') as RequestHandler,
   asyncHandler(importBlogsFromExcel)
 );
 
-router.post('/', authMiddleware, asyncHandler(create));
-router.put('/:id', authMiddleware, asyncHandler(update));
-router.delete('/:id', authMiddleware, asyncHandler(remove));
+router.post('/', adminMiddleware, asyncHandler(create));
+router.put('/:id', adminMiddleware, asyncHandler(update));
+router.delete('/:id', adminMiddleware, asyncHandler(remove));
 
 // Wildcard param route last
 router.get('/:id', asyncHandler(getBlog));

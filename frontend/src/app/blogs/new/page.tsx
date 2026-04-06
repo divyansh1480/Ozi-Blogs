@@ -7,13 +7,13 @@ import BlogEditor from '@/components/BlogEditor';
 import { api } from '@/lib/api';
 
 export default function NewBlogPage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isAdmin, isLoading } = useAuth();
   const router = useRouter();
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/auth/login');
+    if (!isLoading && (!isAuthenticated || !isAdmin)) {
+      router.push('/admin/login');
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, isAdmin, router]);
 
   const handleSave = async (data: {
     title: string;
@@ -31,7 +31,7 @@ export default function NewBlogPage() {
     }
   };
 
-  if (isLoading || !isAuthenticated) return null;
+  if (isLoading || !isAuthenticated || !isAdmin) return null;
 
   return (
     <main className="min-h-screen bg-gray-50">
