@@ -30,8 +30,9 @@ apiClient.interceptors.response.use(
   async (error) => {
     const original = error.config;
     if (error.response?.status === 401 && !original._retry) {
-      // Don't attempt refresh for the initial auth probe — it's expected to 401 for guests
-      if (original.url?.endsWith('/auth/me')) return Promise.reject(error);
+      // Auth endpoints returning 401 mean bad credentials / no session — never try to refresh.
+      // (Refreshing /auth/refresh itself causes a deadlock; /auth/login 401 means wrong password.)
+      if (original.url?.includes('/auth/')) return Promise.reject(error);
 
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
