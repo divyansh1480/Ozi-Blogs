@@ -96,6 +96,8 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
   const insertAtFnRef = useRef<((pos: number, html: string) => void) | null>(null);
   const focusFnRef = useRef<(() => void) | null>(null);
   const pendingInsertPosRef = useRef<number | null>(null);
+  // Holds the first section's HTML until TipTap mounts and onReady fires
+  const pendingFirstSectionRef = useRef<string | null>(null);
   const sectionsPanelRef = useRef<HTMLDivElement>(null);
   const sectionsButtonRef = useRef<HTMLButtonElement>(null);
   const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -344,8 +346,9 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
                     // TipTap already mounted — insert directly
                     insertSection(html);
                   } else {
-                    // TipTap not yet mounted — set content and switch to section mode
-                    setContent(html);
+                    // TipTap not yet mounted — stash HTML and mount TipTap empty.
+                    // onReady will insert it as a proper htmlBlock node (with box/border).
+                    pendingFirstSectionRef.current = html;
                     setMode('section');
                   }
                 }}
@@ -387,7 +390,15 @@ export default function BlogEditor({ initialData, onSave }: BlogEditorProps) {
               onChange={setContent}
               placeholder="Start writing your blog..."
               sectionMode={mode === 'section'}
-              onReady={(fn) => { insertFnRef.current = fn; }}
+              onReady={(fn) => {
+                insertFnRef.current = fn;
+                // Insert first section as a proper htmlBlock node now that TipTap is ready
+                if (pendingFirstSectionRef.current) {
+                  const html = pendingFirstSectionRef.current;
+                  pendingFirstSectionRef.current = null;
+                  fn(html);
+                }
+              }}
               onInsertAtReady={(fn) => { insertAtFnRef.current = fn; }}
               onFocusReady={(fn) => { focusFnRef.current = fn; }}
             />
