@@ -140,7 +140,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // ── Login ─────────────────────────────────────────────────────────────────
   const login = async (emailOrUsername: string, password: string) => {
     try {
-      const response = await apiClient.post('/auth/login', { emailOrUsername, password });
+      // Send both fields for compatibility with old and new backend versions
+      const response = await apiClient.post('/auth/login', { emailOrUsername, email: emailOrUsername, password });
       if (response.data.success && response.data.data?.user) {
         setUser(response.data.data.user);
       } else {
