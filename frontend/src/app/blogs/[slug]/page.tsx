@@ -15,7 +15,7 @@ interface BlogPageProps {
   params: { slug: string };
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ozi-blogs-7.onrender.com/api';
 
 async function getBlog(slug: string): Promise<BlogWithAuthor | null> {
   try {

@@ -10,7 +10,7 @@ interface ProfilePageProps {
   params: { username: string };
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://ozi-blogs-7.onrender.com/api';
 
 async function getProfile(username: string): Promise<{ user: User & { followers?: number }; blogs: Blog[] } | null> {
   try {

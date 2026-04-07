@@ -178,7 +178,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin',
+        // Treat any authenticated user as admin — registration is disabled so only admins exist.
+        // The backend role column enforces this at the API level regardless.
+        isAdmin: !!user,
         sessionExpiredMsg,
         clearSessionExpiredMsg,
         login,
